@@ -29,8 +29,9 @@ brew install kubectx
 
 # Install Helm
 echo "Installing helm, Kubernetes package manager"
-brew install kubernetes-helm
-
+curl -LO https://git.io/get_helm.sh
+chmod 700 get_helm.sh
+./get_helm.sh
 
 # Install AWS CLI
 echo "Installing the AWS CLI tool"
