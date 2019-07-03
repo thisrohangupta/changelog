@@ -1,4 +1,3 @@
 # Introduction
 
-Welcome to the Blackbelt team, here is the toolkit and ramp up scripts to get your environment ready for your day to day tasks.
-
+Scripts to get me up and running and with any laptop work or personal. A lot of kubernetes installations and brew setup.
