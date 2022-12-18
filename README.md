@@ -1,5 +1,32 @@
 # Introduction
 
+In order to provide the best software delivery experience for our customers, Harness has introduced an enhanced experience for Service and Environment entities (V2) in the CD NextGen platform.
+
+The new V2 experience will go into effect on Jan 31, 2023 as the default experience. Except for specific accounts, the current V1 experience will then be removed for all accounts at that time.
+
+## Why Make the Change:
+The enhanced Service and Environment feature (V2) comes with a more robust Service and Environment entity that has service variables, independent infrastructure definitions, and capabilities to override files and variables. When adopting V2 Service and Environments, you will notice an overall reduction in configuration baked into the pipelines. These changes are also reflected in the the Harness APIs as well.
+
+All new deployment swimlanes (ECS, Deployment Template, SSH, WinRM, etc.) are only available on the new V2 Experience. New innovations such as Enterprise GitOps, Support for multi-Service and multi-Environment along with the ability to group Environments in an Environment Group will also be based on the V2 experience. The new V2 experience has been designed to provided users and organizations with simpler configuration and ability to scale.
+
+**Impact:**
+Existing Users and Projects in the UI
+There is no impact on your existing pipelines using V1 services and environments. Post 1/31/2023, when you create a new stage, in an existing pipeline, V2 experience will be the default. 
+New Users/ Projects
+Please note that any new services and environments that are created in	Harness will be on the new V2 experience. 
+
+**API**
+Harness introduced two new APIs to support the V2 Experience. The API reference is shared in the Document Resources/API Documentation section. 
+https://apidocs.harness.io/tag/Environments#operation/createEnvironmentV2
+https://apidocs.harness.io/tag/Services#operation/createServiceV2
+
+**TERRAFORM AUTOMATION**
+Customers will need to update their service/environment automation to use V2 APIs. 
+https://registry.terraform.io/providers/harness/harness/latest/docs/resources/platform_service 
+https://registry.terraform.io/providers/harness/harness/latest/docs/resources/platform_environment 
+https://registry.terraform.io/providers/harness/harness/latest/docs/resources/platform_infrastructure 
+
+
 ## Changelog since Service V1 and Environment V1 Release
 
 ### Please read this before Upgrade!
