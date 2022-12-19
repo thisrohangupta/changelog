@@ -184,7 +184,7 @@ service:
 }
 ```
 
-#### TERRAFOR PROVIDER
+#### TERRAFORM PROVIDER
 
 - The Terraform Provider Service Resource Endpoint HAS NOT CHANGED - https://registry.terraform.io/providers/harness/harness/latest/docs/resources/platform_service 
 - The Service Resource Payload has a new field added for Service Creation - YAML 
@@ -337,7 +337,7 @@ environment:
 }
 ```
 
-#### TERRAFOR PROVIDER
+#### TERRAFORM PROVIDER
 
 - The Terraform Provider Environment Resource Endpoint HAS NOT CHANGED -https://registry.terraform.io/providers/harness/harness/latest/docs/resources/platform_environment 
 - The Environment Resource Payload has a new field added for Environment Creation - YAML 
@@ -448,8 +448,11 @@ infrastructureDefinition:
   allowSimultaneousDeployments: false
 ```
 
-#### TERRAFOR PROVIDER
+#### TERRAFORM PROVIDER
 - Harness released a new Terraform Provider Resource for Infrastructure Definitions: https://registry.terraform.io/providers/harness/harness/latest/docs/resources/platform_infrastructure 
+
+
+##### New Terraform Provider Infrastructure Definition Resource
 
 ```
 resource "harness_platform_infrastructure" "example" {
