@@ -36,7 +36,9 @@ For Users coming from our CD 1.0 Product, this will be a significant change that
   - `loadbaBancer` properties
   - `networkConfiguration` 
   - `desiredCount` 
-- We can manipulate the deployment behavior via the new `deploymentConfiguration` property
+- We can manipulate the deployment behavior via the new `deploymentConfiguration` property:
+  - `maximumPercent` more details [here](https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_DeploymentConfiguration.html)
+  - `minimumHealthyPercent` more details [here](https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_DeploymentConfiguration.html)
 
 
 
