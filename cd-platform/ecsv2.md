@@ -30,7 +30,15 @@ For Users coming from our CD 1.0 Product, this will be a significant change that
 - The ECS Service now has more parameters via the Task Definition and Service Definition.
 - Scaling Policies have moved to the ECS Service from the ECS Service Setup step and are now configurable as YAML or JSON files in the Service
 - The Scalable Targets have moved from the ECS Service Setup Step and are now configurable as YAML or JSON param files in the Service
-- 
+- The AWS VPC, Security Group, Subnets, Execution Role ARN have moved out of the Infrastructure Definition and are now part of the Service Definition configuration
+- The Service Definition requires more configuration:
+  - `serviceName` 
+  - `loadbaBancer` properties
+  - `networkConfiguration` 
+  - `desiredCount` 
+- We can manipulate the deployment behavior via the new `deploymentConfiguration` property
+
+
 
 #### ECS 2.0 Task Definition - Supported Fields
 
@@ -112,6 +120,10 @@ volumes: []
 
 ```
 launchType: FARGATE
+
+## ECS V2 UPDATE
+## The Service name, Desired Count, and network configuration needs to be defined in the Service Definition now
+
 serviceName: myapp
 desiredCount: 2
 networkConfiguration:
@@ -121,6 +133,11 @@ networkConfiguration:
     subnets:
     - <Subnet Id>
     assignPublicIp: ENABLED 
+    
+    
+## ECS V2 UPDATE
+## We can define the deployment behavior properties in the Service Definition and Harness will deploy with the defined configuration
+
 deploymentConfiguration:
   maximumPercent: 200
   minimumHealthyPercent: 100
