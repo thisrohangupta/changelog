@@ -4,5 +4,5 @@ Welcome to the Harness Product Manager Changelog! In this repo, you will get all
 
 # Table of Contents
 
-- Service and Environment V2 Changes [https://github.com/thisrohangupta/changelog/tree/master/cd-core/service_environment_v2]
-- ECS V2 Deployment Swimlane 
+- [Service and Environment V2 Changes](https://github.com/thisrohangupta/changelog/tree/master/cd-core/service_environment_v2)
+- [ECS V2 Deployment Swimlane](https://github.com/thisrohangupta/changelog/blob/master/cd-platform/ecsv2.md)
