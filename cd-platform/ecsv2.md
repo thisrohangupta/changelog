@@ -9,7 +9,7 @@ For Users coming from our CD 1.0 Product, this will be a significant change that
 - For Documentation on our [ECS 2.0 Swimlane](https://docs.harness.io/article/vytf6s0kwc-ecs-deployment-tutorial)
 - For our Harness Developer Hub [ECS Deployment Quickstart](https://developer.harness.io/tutorials/deploy-services/docker-ecs ) 
 
-## What has Changed from CD 1.0 ECS to CD 2.0 ECS
+## Major Changes from CD 1.0 ECS to CD 2.0 ECS
 
 **ECS Steps that are deprecated in ECS 2.0**
 - Deprecated the [ECS Service Setup Step ](https://docs.harness.io/article/oinivtywnl-ecs-workflows)
@@ -21,6 +21,11 @@ For Users coming from our CD 1.0 Product, this will be a significant change that
 **New Deployment Types Introduced in ECS 2.0**
 - Added [Rolling Deployment Support ](https://docs.harness.io/article/vytf6s0kwc-ecs-deployment-tutorial#define_the_rolling_deployment_steps)
 - Revamped the [Canary Deployment Behavior](https://docs.harness.io/article/vytf6s0kwc-ecs-deployment-tutorial#ecs_canary_deployments) 
+
+**Infrastructure Definitions**
+- Harness has made the Infrastructure Definitions a lighter configuration now that can be reusable for other ECS Services for deployment
+- they no longer have Service specific properties like Networking, ExecutionRoleARN, AWS VPC Information
+
 
 
 ## What has Changed by Kind 
