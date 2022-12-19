@@ -49,7 +49,7 @@ For Users coming from our CD 1.0 Product, this will be a significant change that
 
 #### ECS 2.0 Task Definition - Supported Fields
 
-**Sample Task Definition and supported parameters**
+**Sample Task Definition and supported parameters - YAML Example**
 
 ```
 ipcMode:
@@ -123,7 +123,7 @@ volumes: []
 
 #### ECS 2.0 Service Definition - Supported Fields
 
-**Sample Service Definition and supported parameters**
+**Sample Service Definition and supported parameters - YAML Example**
 
 ```
 launchType: FARGATE
@@ -153,5 +153,4 @@ loadBalancers:
   containerName: nginx
   containerPort: 80    
 ```
-
 
