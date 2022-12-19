@@ -24,7 +24,7 @@ For Users coming from our CD 1.0 Product, this will be a significant change that
 
 **Infrastructure Definitions**
 - Harness has made the Infrastructure Definitions a lighter configuration now that can be reusable for other ECS Services for deployment
-- The ECS Infrastructure Definition no longer has Service specific properties like Networking, ExecutionRoleARN, AWS VPC Information, this has moved to the Service Definition
+- The ECS Infrastructure Definition no longer has Service specific properties like `Networking`, `ExecutionRoleARN`, `AWSVPC` Information, this has moved to the Service Definition
 
 
 
@@ -32,7 +32,7 @@ For Users coming from our CD 1.0 Product, this will be a significant change that
 
 ### Service
 
-- The ECS Service now has more parameters via the Task Definition and Service Definition.
+- The ECS Service now has more parameters via the [Task Definition](https://docs.harness.io/article/vytf6s0kwc-ecs-deployment-tutorial#add_the_task_definition) and [Service Definition](https://docs.harness.io/article/vytf6s0kwc-ecs-deployment-tutorial#add_the_service_definition).
 - Scaling Policies have moved to the ECS Service from the ECS Service Setup step and are now configurable as YAML or JSON files in the Service
 - The Scalable Targets have moved from the ECS Service Setup Step and are now configurable as YAML or JSON param files in the Service
 - The AWS VPC, Security Group, Subnets, Execution Role ARN have moved out of the Infrastructure Definition and are now part of the Service Definition configuration
