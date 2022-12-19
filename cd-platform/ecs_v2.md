@@ -119,6 +119,75 @@ proxyConfiguration:
 volumes: []
 ```
 
+**Sample Task Definition and supported parameters - JSON Example**
+
+```
+{
+    "ipcMode": null,
+    "executionRoleArn": "<ecsInstanceRole Role ARN>",
+    "containerDefinitions": [
+        {
+            "dnsSearchDomains": null,
+            "environmentFiles": null,
+            "entryPoint": null,
+            "portMappings": [
+                {
+                    "hostPort": 80,
+                    "protocol": "tcp",
+                    "containerPort": 80
+                }
+            ],
+            "command": null,
+            "linuxParameters": null,
+            "cpu": 0,
+            "environment": [],
+            "resourceRequirements": null,
+            "ulimits": null,
+            "dnsServers": null,
+            "mountPoints": [],
+            "workingDirectory": null,
+            "secrets": null,
+            "dockerSecurityOptions": null,
+            "memory": null,
+            "memoryReservation": 128,
+            "volumesFrom": [],
+            "stopTimeout": null,
+            "image": "<+artifact.image>",
+            "startTimeout": null,
+            "firelensConfiguration": null,
+            "dependsOn": null,
+            "disableNetworking": null,
+            "interactive": null,
+            "healthCheck": null,
+            "essential": true,
+            "links": null,
+            "hostname": null,
+            "extraHosts": null,
+            "pseudoTerminal": null,
+            "user": null,
+            "readonlyRootFilesystem": null,
+            "dockerLabels": null,
+            "systemControls": null,
+            "privileged": null,
+            "name": "nginx"
+        }
+    ],
+    "placementConstraints": [],
+    "memory": "512",
+    "taskRoleArn": "<ecsInstanceRole Role ARN>",
+    "family": "fargate-task-definition",
+    "pidMode": null,
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "networkMode": "awsvpc",
+    "runtimePlatform": null,
+    "cpu": "256",
+    "inferenceAccelerators": null,
+    "proxyConfiguration": null,
+    "volumes": []
+}
+```
 
 
 #### ECS 2.0 Service Definition - Supported Fields
@@ -153,4 +222,59 @@ loadBalancers:
   containerName: nginx
   containerPort: 80    
 ```
+
+**Sample Service Definition and supported parameters - JSON Example**
+
+```
+{
+    "launchType": "FARGATE",
+    "serviceName": myapp,
+    "desiredCount": 1,
+    "networkConfiguration": {
+        "awsvpcConfiguration": {
+            "securityGroups": [
+                "<Security Group Id>"
+            ],
+            "subnets": [
+                "<Subnet Id>"
+            ],
+            "assignPublicIp": "ENABLED"
+        }
+    },
+    "deploymentConfiguration": {
+        "maximumPercent": 100,
+        "minimumHealthyPercent": 0
+    }
+}
+```
+### Infrastructure Definitions
+
+- The Infrastructure Definitions in ECS v2 do not have AWS VPC, Security Group, Network Policies associated with it, this configuration is now moved to the service
+- The cluster can be a runtime input, this makes the infrastructure definition re-usable for other clusters in a given environment
+- Infrastructure Definition YAML has changed for ECS
+
+```
+infrastructureDefinition:
+  name: ecs-dev-cluster
+  identifier: ecsDevCluster
+  description: "Sanbox Development Cluster"
+  tags: {}
+  orgIdentifier: default
+  projectIdentifier: cdProductManagement
+  environmentRef: devEcs
+  deploymentType: ECS
+  type: ECS
+  spec:
+    connectorRef: account.awsEcs
+    region: us-east-1
+    cluster: staging
+  allowSimultaneousDeployments: false
+
+```
+
+
+### Deployment Behavior Changes
+
+#### Rolling Deployment
+
 
