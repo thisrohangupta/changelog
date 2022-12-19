@@ -104,7 +104,7 @@ service:
               type: DockerRegistry
             
  ## SERVICE V2 UPDATE
- ## NEW CAPABILITY: We now have service variables that are mapped and managed with the service
+ ## NEW CAPABILITY: We now have service variables that are mapped and managed with the service, no longer defined in the Pipeline
  ## this can be overwritten when deploying the service to different environments
  
  
@@ -483,6 +483,322 @@ resource "harness_platform_infrastructure" "example" {
       EOT
 }
 ```
+
+### Stage
+- The Stage definition changes when the Service and Environment V2 update is enabled.
+- Stage now has a Deployment Type, a Service Ref, an Environment Ref, and an Infrastructure Definition that needs to be defined along with the Execution Steps
+
+```
+    - stage:
+        name: Deploy
+        identifier: Deploy
+        description: ""
+        type: Deployment
+        spec:
+        
+ ## SERVICE + ENVIRONMENT V2 UPDATE
+ ## deploymentType - this scopes the stage config to one of the Deployment Types that Harness offers 
+ ## Steps, Services, Environments, Infrastructure Definitions are all scoped to the stage's deployment type - prevents incompatible config usage
+ 
+          deploymentType: Kubernetes
+          
+ ## SERVICE + ENVIRONMENT V2 UPDATE
+ ## serviceref - is now a reference to the service object that is configured and managed outside the pipeline
+ ## serviceInputs - these are the runtime inputs that users provide for the artifact when they deploy the particular service
+ 
+          service:
+            serviceRef: nginxcanary
+            serviceInputs:
+              serviceDefinition:
+                type: Kubernetes
+                spec:
+                  artifacts:
+                    primary:
+                      primaryArtifactRef: <+input>
+                      sources: <+input>
+                      
+ ## SERVICE + ENVIRONMENT V2 UPDATE
+ ## environmentref - is now a reference to the environment object that is configured and managed outside the pipeline
+ ## infrastructureDefinitions - this object is defined outside of the pipeline and is referenced via the identifier, the yaml is inserted into the stage definition once defined
+ 
+          environment:
+            environmentRef: staging
+            deployToAll: false
+  
+            infrastructureDefinitions:
+              - identifier: productstaging
+                inputs:
+                  identifier: productstaging
+                  type: KubernetesDirect
+                  spec:
+                    namespace: <+input>.allowedValues(dev,qa,prod)
+          execution:
+            steps:
+              - stepGroup:
+                  name: Canary Deployment
+                  identifier: canaryDepoyment
+                  steps:
+                    - step:
+                        name: Canary Deployment
+                        identifier: canaryDeployment
+                        type: K8sCanaryDeploy
+                        timeout: 10m
+                        spec:
+                          instanceSelection:
+                            type: Count
+                            spec:
+                              count: 1
+                          skipDryRun: false
+                    - step:
+                        name: Canary Delete
+                        identifier: canaryDelete
+                        type: K8sCanaryDelete
+                        timeout: 10m
+                        spec: {}
+              - stepGroup:
+                  name: Primary Deployment
+                  identifier: primaryDepoyment
+                  steps:
+                    - step:
+                        name: Rolling Deployment
+                        identifier: rollingDeployment
+                        type: K8sRollingDeploy
+                        timeout: 10m
+                        spec:
+                          skipDryRun: false
+            rollbackSteps:
+              - step:
+                  name: Canary Delete
+                  identifier: rollbackCanaryDelete
+                  type: K8sCanaryDelete
+                  timeout: 10m
+                  spec: {}
+              - step:
+                  name: Rolling Rollback
+                  identifier: rollingRollback
+                  type: K8sRollingRollback
+                  timeout: 10m
+                  spec: {}
+        tags: {}
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: StageRollback
+```
+
+
+### Pipeline 
+
+- The Pipeline object changes with the Service and Environment V2 update
+- Your Service and your Environment + Infrastructure Definitions are no longer defined in the Pipeline, they are managed outside of the pipeline
+- The Pipeline will reference the identifier of the Service, Environment and Infrastructure Definitions when being used in a pipeline
+- Each Stage will now have a reference to the Service, Environment and Infrastructure Definition objects
+
+#### Sample Pipeline YAML with Service and Environments V2 Experience Enabled
+
+```
+pipeline:
+  name: Nginx Colors Canary
+  identifier: Nginx_Colors_Canary
+  projectIdentifier: Rohan
+  orgIdentifier: default
+  tags: {}
+  stages:
+    - stage:
+        name: Deploy
+        identifier: Deploy
+        description: ""
+        type: Deployment
+        spec:
+          deploymentType: Kubernetes
+          
+ ## SERVICE + ENVIRONMENT V2 UPDATE
+ ## serviceref - is now a reference to the service object that is configured and managed outside the pipeline
+ ## serviceInputs - these are the runtime inputs that users provide for the artifact when they deploy the particular service
+ 
+          service:
+            serviceRef: nginxcanary
+            serviceInputs:
+              serviceDefinition:
+                type: Kubernetes
+                spec:
+                  artifacts:
+                    primary:
+                      primaryArtifactRef: <+input>
+                      sources: <+input>
+                      
+ ## SERVICE + ENVIRONMENT V2 UPDATE
+ ## environmentref - is now a reference to the environment object that is configured and managed outside the pipeline
+ ## infrastructureDefinitions - this object is defined outside of the pipeline and is referenced via the identifier, the yaml is inserted into the stage definition once defined
+ 
+          environment:
+            environmentRef: staging
+            deployToAll: false
+  
+            infrastructureDefinitions:
+              - identifier: productstaging
+                inputs:
+                  identifier: productstaging
+                  type: KubernetesDirect
+                  spec:
+                    namespace: <+input>.allowedValues(dev,qa,prod)
+          execution:
+            steps:
+              - stepGroup:
+                  name: Canary Deployment
+                  identifier: canaryDepoyment
+                  steps:
+                    - step:
+                        name: Canary Deployment
+                        identifier: canaryDeployment
+                        type: K8sCanaryDeploy
+                        timeout: 10m
+                        spec:
+                          instanceSelection:
+                            type: Count
+                            spec:
+                              count: 1
+                          skipDryRun: false
+                    - step:
+                        name: Canary Delete
+                        identifier: canaryDelete
+                        type: K8sCanaryDelete
+                        timeout: 10m
+                        spec: {}
+              - stepGroup:
+                  name: Primary Deployment
+                  identifier: primaryDepoyment
+                  steps:
+                    - step:
+                        name: Rolling Deployment
+                        identifier: rollingDeployment
+                        type: K8sRollingDeploy
+                        timeout: 10m
+                        spec:
+                          skipDryRun: false
+            rollbackSteps:
+              - step:
+                  name: Canary Delete
+                  identifier: rollbackCanaryDelete
+                  type: K8sCanaryDelete
+                  timeout: 10m
+                  spec: {}
+              - step:
+                  name: Rolling Rollback
+                  identifier: rollingRollback
+                  type: K8sRollingRollback
+                  timeout: 10m
+                  spec: {}
+        tags: {}
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: StageRollback
+```
+
+
+### Templates
+
+- Templates are impacted by the Service and Environments V2 Update
+- Your existing Templates in the Service and Environments V1 Experience will still run till EOL of the API 
+- When migrating to the V2 Service and environments, users will need to create a new stage template that references the V2 Service and Environment
+
+
+#### Sample Stage Template
+
+```
+template:
+  name: Deploy
+  identifier: Deploy
+  type: Stage
+  projectIdentifier: Rohan
+  orgIdentifier: default
+  tags: {}
+  spec:
+    type: Deployment
+    spec:
+ 
+ ## SERVICE + ENVIRONMENT V2 UPDATE
+ ## deploymentType - this scopes the stage config to one of the Deployment Types that Harness offers 
+ ## Steps, Services, Environments, Infrastructure Definitions are all scoped to the stage's deployment type - prevents incompatible config usage
+ 
+      deploymentType: Kubernetes
+      
+ ## SERVICE + ENVIRONMENT V2 UPDATE
+ ## serviceref - is now a reference to the service object that is configured and managed outside the pipeline
+ ## serviceInputs - these are the runtime inputs that users provide for the artifact when they deploy the particular service
+ 
+      service:
+        serviceRef: <+input>
+        serviceInputs: <+input>
+        
+ ## SERVICE + ENVIRONMENT V2 UPDATE
+ ## environmentref - is now a reference to the environment object that is configured and managed outside the pipeline
+ ## infrastructureDefinitions - this object is defined outside of the pipeline and is referenced via the identifier, the yaml is inserted into the stage
+ ## definition once defined
+ 
+      environment:
+        environmentRef: <+input>
+        deployToAll: false
+        environmentInputs: <+input>
+        infrastructureDefinitions: <+input>
+      execution:
+        steps:
+          - step:
+              name: Rollout Deployment
+              identifier: rolloutDeployment
+              type: K8sRollingDeploy
+              timeout: 10m
+              spec:
+                skipDryRun: false
+                pruningEnabled: false
+          - step:
+              type: ShellScript
+              name: Shell Script
+              identifier: ShellScript
+              spec:
+                shell: Bash
+                onDelegate: true
+                source:
+                  type: Inline
+                  spec:
+                    script: kubectl get pods -n <+infra.namespace>
+                environmentVariables: []
+                outputVariables: []
+              timeout: 10m
+          - step:
+              type: Http
+              name: HTTP
+              identifier: HTTP
+              spec:
+                url: https://google.com
+                method: GET
+                headers: []
+                outputVariables: []
+              timeout: 10s
+        rollbackSteps:
+          - step:
+              name: Rollback Rollout Deployment
+              identifier: rollbackRolloutDeployment
+              type: K8sRollingRollback
+              timeout: 10m
+              spec:
+                pruningEnabled: false
+    failureStrategies:
+      - onFailure:
+          errors:
+            - AllErrors
+          action:
+            type: StageRollback
+  versionLabel: "2.0"
+
+```
+
+
 
 
 
