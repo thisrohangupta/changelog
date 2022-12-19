@@ -254,7 +254,7 @@ resource "harness_platform_service" "example" {
 - Environment is now a standalone object that has global environment variable configuration, manifest configurations associated with it
 - The Environment variables can override the variables defined at the Service Variable. Variable Override Information Details: https://docs.harness.io/article/9ryi1ay01f-services-and-environments-overview#service_overrides 
 - Documentation on Environments V2: https://docs.harness.io/article/9ryi1ay01f-services-and-environments-overview#creating_and_using_v2_environments
-- - Harness introduced Environment Service Overrides, Environment Variables defined can override Service variables when the service is deployed into a given environment. Based on the variable name Harness can override the service variable with the environment variable value. 
+- Harness introduced Environment Service Overrides, Environment Variables defined can override Service variables when the service is deployed into a given environment. Based on the variable name Harness can override the service variable with the environment variable value. 
 - Harness has introduced Service specific Environment overrides where users can define specific services and variables they want to override for a given environment. For More Information: https://docs.harness.io/article/9ryi1ay01f-services-and-environments-overview#override_priority 
 
 #### Environment Groups
