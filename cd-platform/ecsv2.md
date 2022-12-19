@@ -24,7 +24,7 @@ For Users coming from our CD 1.0 Product, this will be a significant change that
 
 **Infrastructure Definitions**
 - Harness has made the Infrastructure Definitions a lighter configuration now that can be reusable for other ECS Services for deployment
-- they no longer have Service specific properties like Networking, ExecutionRoleARN, AWS VPC Information
+- The ECS Infrastructure Definition no longer has Service specific properties like Networking, ExecutionRoleARN, AWS VPC Information, this has moved to the Service Definition
 
 
 
