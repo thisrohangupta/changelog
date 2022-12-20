@@ -1,8 +1,16 @@
-# Introduction
+# ECS Deployment 2.0 Support
 
 In the Harness CD 2.0 product, we have revamped the ECS Deployment Swimlane. This includes how users configure a service, deployment behaviors for rolling, canary and Blue-Green as well as the deployment steps we offer. 
 
 For Users coming from our CD 1.0 Product, this will be a significant change that will require time to upgrade and it's important to understand these changes. 
+
+## Table of Contents
+
+- [Documentation for ECS Deployment 2.0](https://github.com/thisrohangupta/changelog/blob/e8d920dc0c828722e174ba91ddde9da2a07cd83e/cd-platform/ecs_v2.md#L11)
+
+- [Major Changes from CD 1.0 to 2.0 for ECS](https://github.com/thisrohangupta/changelog/blob/e8d920dc0c828722e174ba91ddde9da2a07cd83e/cd-platform/ecs_v2.md#L18)
+
+- [What has Changed by Kind](https://github.com/thisrohangupta/changelog/blob/e8d920dc0c828722e174ba91ddde9da2a07cd83e/cd-platform/ecs_v2.md#L39)
 
 ## Documentation and Resources provided by Harness 
 

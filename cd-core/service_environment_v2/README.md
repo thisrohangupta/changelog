@@ -4,6 +4,17 @@ In order to provide the best software delivery experience for our customers, Har
 
 The new V2 experience will go into effect on Jan 31, 2023 as the default experience. Except for specific accounts, the current V1 experience will then be removed for all accounts at that time.
 
+## Table of Contents
+
+- [Why Make The Change](https://github.com/thisrohangupta/changelog/blob/e8d920dc0c828722e174ba91ddde9da2a07cd83e/cd-core/service_environment_v2/README.md#L11)
+
+- [Changes since Service and Environments V1](https://github.com/thisrohangupta/changelog/blob/e8d920dc0c828722e174ba91ddde9da2a07cd83e/cd-core/service_environment_v2/README.md#L11)
+
+- [Changes By Kind](https://github.com/thisrohangupta/changelog/blob/e8d920dc0c828722e174ba91ddde9da2a07cd83e/cd-core/service_environment_v2/README.md#L46)
+
+- [Migration to V2 Service and Environments](https://github.com/thisrohangupta/changelog/blob/e8d920dc0c828722e174ba91ddde9da2a07cd83e/cd-core/service_environment_v2/README.md#L817)
+
+
 ## Why Make the Change:
 The enhanced Service and Environment feature (V2) comes with a more robust Service and Environment entity that has service variables, independent infrastructure definitions, environment groups, and capabilities to override files and variables. When adopting V2 Service and Environments, you will notice an overall reduction in configuration baked into the pipelines. These changes are also reflected in the the Harness APIs as well. 
 
