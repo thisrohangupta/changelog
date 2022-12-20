@@ -801,8 +801,118 @@ template:
   versionLabel: "2.0"
 
 ```
+---
 
+## Migration from the V1 Service and Environments to the V2
 
+To support automated migration of services and environments, we have created two apis:
 
+The idea of the APIs is to copy over the serviceDefinition from a pipeline stage and update the existing service with this. Also it would create an infrastructure definition by using the details from the `infrastructure.infrastructureDefinition` yaml field in the pipeline stage
+
+If the pipeline:
+1. uses stage templates
+2. does not use any templates
+
+The API would be able to update the pipeline yaml also (given that the user running the APIs has permission to update the pipeline. Same applies for services and environments also)
+
+### Pipeline Level Migration
+This API will migrate services and environments for all CD stages that exist in a pipeline. It can update pipeline Yaml also (optionally). It will take CD stages of pipeline one by one and migrate them to the v2 service and environments
+
+**Sample Curl Command**
+
+```
+curl --location --request POST 'https://<base_url>/gateway/ng/api/service-env-migration/pipeline?accountIdentifier=account_identifier' \
+--header 'content-type: application/yaml' \
+--header 'Authorization: auth_token' \
+--data-raw '{
+ "orgIdentifier": '\''org_identifier'\'',
+ "projectIdentifier": '\''project_identifier'\'',
+ "infraIdentifierFormat": '\''<+stage.identifier>_<+pipeline.identifier>_infra'\'',
+ "pipelineIdentifier": '\''pipeline_identifier'\'',
+ "isUpdatePipeline": true,
+ "templateMap" : 
+      {
+          "source_template_ref@ source_template_version": {
+              "templateRef" : "target_template_ref",
+              "versionLabel" : "target_template_version"
+          }
+      },
+      "skipInfras": ["abc"],
+      "skipServices": ["abc"],
+}'
+```
+
+**Sample Response**
+
+```
+{
+    "status": "SUCCESS",
+    "data": {
+        "failures": [
+            {
+                "orgIdentifier": "org_identifier",
+                "projectIdentifier": "project_identifier",
+                "pipelineIdentifier": "pipeline_identifier",
+                "stageIdentifier": "stage_identifier",
+                "failureReason": "service of type v1 doesn't exist in stage yaml"
+            }
+        ],
+        "pipelineYaml": "yaml",
+        "migrated": false
+    },
+    "metaData": null,
+    "correlationId": "9ed00aca-d788-441e-a636-58661ef36efe"
+}
+```
+
+## Project Level Migration
+
+This API will migrate services and envs for all pipelines exist in a project. It can update pipeline Yaml also optionally.
+
+**Sample Request**
+
+```
+curl --location --request POST 'https://<base_url>/gateway/ng/api/service-env-migration/project?accountIdentifier=account_id' \
+--header 'content-type: application/yaml' \
+--header 'Authorization: auth_token' \
+--data-raw '{
+ "orgIdentifier": '\''org_identifier'\'',
+ "projectIdentifier": '\''project_identifier'\'',
+ "infraIdentifierFormat": '\''<+stage.identifier>_<+pipeline.identifier>_infra'\'',
+  "isUpdatePipeline": true,
+  "templateMap" : 
+      {
+          "source_template_ref@ source_template_version": {
+              "templateRef" : "target_template_version",
+              "versionLabel" : "v1"
+          }
+      },
+      "skipInfras": ["abc"],
+      "skipServices": ["abc"],
+      "skipPipelines": ["def"]
+}'
+```
+
+**Sample Response**
+
+```
+{
+    "status": "SUCCESS",
+    "data": {
+        "failures": [
+            {
+                "orgIdentifier": "org_identifier",
+                "projectIdentifier": "project_identifier",
+                "pipelineIdentifier": "pipeline_identifier",
+                "stageIdentifier": "stage_identifier",
+                "failureReason": "service of type v1 doesn't exist in stage yaml"
+            }
+        ],
+        "migratedPipelines": ["def"]
+    },
+    "metaData": null,
+    "correlationId": "9ed00aca-d788-441e-a636-58661ef36efe"
+}
+```
 
 
