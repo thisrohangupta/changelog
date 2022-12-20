@@ -1,6 +1,9 @@
 # Introduction 
 
-Welcome to the Harness Product Manager Changelog! In this repo, you will get all the details around recent changes we have made to the CD Product for CD 2.0. This repository has notes detailing changes and improvements we have made to our CD Product. Specifically around core entities like Services, Environments, Pipelines and Deployment swimlanes. This also documents the changes from the CD 1.0 Product to the CD 2.0 Product.
+Welcome to the Harness Product Manager Changelog! Here at Harness, we believe in radical transperency. We should let our users know about the changes we introduce into the platform, decisions we made with features, and tips to adopt the new capabilities. This repo contains documentation around the changes from our Harness CD 1.0 Product to our Harness CD 2.0 Product. It also includes new changes we have introduced with our CD 2.0 product after its initial launch. 
+
+PM Maintainer: Rohan Gupta 
+Twitter: @ThisRohanGupta
 
 # Table of Contents
 
