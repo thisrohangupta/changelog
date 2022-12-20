@@ -1,4 +1,4 @@
-# Introduction
+# Service and Environments V2 Experience Release
 
 In order to provide the best software delivery experience for our customers, Harness has introduced an enhanced experience for Service and Environment entities (V2) in the CD NextGen platform.
 
