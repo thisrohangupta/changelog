@@ -875,8 +875,30 @@ curl --location --request POST 'https://<base_url>/gateway/ng/api/service-env-mi
     "correlationId": "9ed00aca-d788-441e-a636-58661ef36efe"
 }
 ```
+**Input Fields**
 
-## Project Level Migration
+- `Authorization` - Auth Bearer Token, Can be extracted from header of network calls from browser after login in harness
+- `accountIdentifier` - user account ID
+- `orgIdentifier` -  organization identifier of the pipeline you wish to migrate
+- `projectIdentifier` - project identifier of the pipeline you wish to migrate
+- `infraIdentifierFormat` - format for infrastructure definition identifier. Harness will replace the expressions in this string by actual values and use it as an identifier to create an **infrastructure definition**.
+- `templateMap` - 	
+mapping of source template to target template.
+  - **source template**: It refers to a stage template which is currently existing in a CD stage yaml.
+  - **target template**: It refers to a stage template which will replace the currently existing source template in a CD stage yaml.
+  - `skipInfras`: list of infrastructures identifier to skip migration, this allows users to omit infrastructures they don't want to upgrade
+  - `skipServices`: list of service identifier to skip migration, this allows users to omit services they don't want to upgrade
+  - `isUpdatePipeline`: pipeline yaml will get updated with new svc-env  framework if it is true otherwise pipeline yaml will not get updated.
+
+
+**Output Fields**
+
+   - `failures`: List of reasons for failure of migration of CD stages. 
+   - `pipelineYaml`: Updated pipeline yaml with new  svc-env  framework
+   - `migrated`: true if pipeline got updated otherwise false 
+
+
+### Project Level Migration
 
 This API will migrate services and envs for all pipelines exist in a project. It can update pipeline Yaml also optionally.
 
