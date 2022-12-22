@@ -12,7 +12,6 @@ In Harness CD 2.0, we have revamped our Template Library Experience. Templates a
 - You can copy the configuration of a template and forgoe linking it
   - **WARNING: If you do not link a template, then you cannot enforce the stable version**
 
-
 ### Difference between Copy and Use Template in the Harness UI
 
 #### Copy Template Option
@@ -296,7 +295,7 @@ pipeline:
 ### Pipeline Templates
 
 - Pipeline Templates can support all stage types to be configured in it and be saved as one pipeline template
-- Pipeline templates can reference Stage Templates at the same object level or higher. 
+- Pipeline templates can reference Stage Templates at the same object level or higher.
 - Pipeline Templates can be managed in the [Harness Git Experience](https://docs.harness.io/article/xl028jo9jk-git-experience-overview)
 - Steps and Stages are un-editable when its linked to a pipeline in a project. The user needs to go to the studio to change the template configuration
 
