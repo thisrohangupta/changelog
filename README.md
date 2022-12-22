@@ -15,3 +15,5 @@ Welcome to the Harness Product Manager Changelog! Here at Harness, we believe in
 
 ### Deployment Swimlanes
 - [ECS V2 Deployment Swimlane](https://github.com/thisrohangupta/changelog/blob/master/cd-platform/ecs_v2.md)
+- [Kubernetes](https://github.com/thisrohangupta/changelog/blob/master/cd-platform/kubernetes.md)
+- [Kustomize]
