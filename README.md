@@ -12,6 +12,7 @@ Welcome to the Harness Product Manager Changelog! Here at Harness, we believe in
 
 ### CD Core Objects
 - [Service and Environment V2 Changes](https://github.com/thisrohangupta/changelog/tree/master/cd-core/service_environment_v2)
+- [Templates](https://github.com/thisrohangupta/changelog/blob/master/cd-core/templates/README.md)
 
 ### Deployment Swimlanes
 - [ECS V2](https://github.com/thisrohangupta/changelog/blob/master/cd-platform/ecs_v2.md)
