@@ -833,7 +833,7 @@ The API would be able to update the pipeline yaml also (given that the user runn
 
 This API will migrate services and environments for all CD stages that exist in a pipeline. It can update pipeline Yaml also (optionally). It will take CD stages of pipeline one by one and migrate them to the v2 service and environments
 
-#### Sample Curl Command
+#### Sample Curl Command for pipeline level migration
 
 ```CURL
 curl --location --request POST 'https://<base_url>/gateway/ng/api/service-env-migration/pipeline?accountIdentifier=account_identifier' \
@@ -857,7 +857,7 @@ curl --location --request POST 'https://<base_url>/gateway/ng/api/service-env-mi
 }'
 ```
 
-#### Sample Response
+#### Sample Response for pipeline level migration api
 
 ```JSON
 {
@@ -880,7 +880,7 @@ curl --location --request POST 'https://<base_url>/gateway/ng/api/service-env-mi
 }
 ```
 
-#### Input Fields
+### Input Fields for Account Level Migration
 
 - `Authorization` - Auth Bearer Token, Can be extracted from header of network calls from browser after login in harness
 - `accountIdentifier` - user account ID
@@ -895,17 +895,17 @@ mapping of source template to target template.
   - `skipServices`: list of service identifier to skip migration, this allows users to omit services they don't want to upgrade
   - `isUpdatePipeline`: pipeline yaml will get updated with new svc-env  framework if it is true otherwise pipeline yaml will not get updated.
 
-#### Output Fields
+### Output Fields for Account Level Migration
 
 - `failures`: List of reasons for failure of migration of CD stages.
 - `pipelineYaml`: Updated pipeline yaml with new  svc-env  framework
 - `migrated`: true if pipeline got updated otherwise false
 
-### Project Level Migration
+## Project Level Migration
 
 This API will migrate services and envs for all pipelines exist in a project. It can update pipeline Yaml also optionally.
 
-#### Sample Request
+### Sample Request for Project Level Migration API
 
 ```curl
 curl --location --request POST 'https://<base_url>/gateway/ng/api/service-env-migration/project?accountIdentifier=account_id' \
@@ -929,7 +929,7 @@ curl --location --request POST 'https://<base_url>/gateway/ng/api/service-env-mi
 }'
 ```
 
-#### Sample Response**
+### Sample Response for Project Level Migration Request
 
 ```json
 {
@@ -950,3 +950,12 @@ curl --location --request POST 'https://<base_url>/gateway/ng/api/service-env-mi
     "correlationId": "9ed00aca-d788-441e-a636-58661ef36efe"
 }
 ```
+
+### Additional Input Fields for Project Level Migration Request
+
+`skipPipelines` - list of pipeline identifier to skip migration, if the user doesn't want to migrate a pipeline, add the pipeline identifier to this list
+
+### Output Fields for Project Migration
+
+`failures` - List of reasons for failure of migration of CD stages.
+`migrated` - List of successfully migrated pipelines.
