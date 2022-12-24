@@ -1,8 +1,6 @@
 # Kubernetes Deployment Support
 
-## Kubernetes Steps and Behaviors
-
-### Kubernetes Apply Step
+## Kubernetes Apply Step
 
 - The Kubernetes apply step allows users to apply specific kuberntes manifest files within their Kubernetes Service's Manifest Repository.
 
@@ -20,7 +18,7 @@
 
 - In the event of Deployment Failure, Harness will not rollback the Apply step action because we don't have a record of it's state when we perform the apply. We recommend users defining in the Rollback Section of the Stage to undo the Apply Steps Action. We will rollback any infrastructure or deployments that happened prior to the step.
 
-#### Kubernetes Apply Step Options
+### Kubernetes Apply Step Options
 
 - `SkipDryRun` - this options allows users to skip the dry run for the Kubernetes Manifests that are about to be applied. Harness will run `kubectl apply -f <userProvidedFiles>` rather than `kubectl apply -f <userProvidedFiles> --dry-run`
 - `SkipSteadyStateCheck` - By default, Harness checks to see if a deployed workload has reached steady state. If you select this option, Harness will not check that the workload has reached steady state.
@@ -29,7 +27,7 @@
 - `CommandFlags` - In the **Advanced** Section, User's can append flags after the `kubectl apply -f <+filename>` command. This option only works with Delegates that have `kubectl binary version 1.22` installed. For options please review the [Kubernetes Documentation on Apply](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply)
 
 
-##### Note: The step DOES NOT SUPPORT Kubernets Apply subcommands
+#### Note: The step DOES NOT SUPPORT Kubernets Apply subcommands
 
 ```TEXT
 kubectl apply view-last-applied - just return the current value of last-applied annotation
