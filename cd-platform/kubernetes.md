@@ -27,7 +27,7 @@
 - `CommandFlags` - In the **Advanced** Section, User's can append flags after the `kubectl apply -f <+filename>` command. This option only works with Delegates that have `kubectl binary version 1.22` installed. For options please review the [Kubernetes Documentation on Apply](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#apply)
 
 
-#### Note: The step DOES NOT SUPPORT Kubernets Apply subcommands
+#### Note: The step DOES NOT SUPPORT Kubernets Apply subcommands when using commandFlags
 
 ```TEXT
 kubectl apply view-last-applied - just return the current value of last-applied annotation
