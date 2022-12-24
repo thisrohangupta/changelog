@@ -49,6 +49,9 @@ kubectl apply edit-last-applied - require input from the user as opens value of 
                 skipDryRun: false
                 skipSteadyStateCheck: true
                 skipRendering: false
+                commandFlags: 
+                  - commandType: Apply
+                    flag: "--dry-run=true --server-side"
                 overrides:
                   - manifest:
                       identifier: DBValues
