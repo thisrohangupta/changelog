@@ -47,6 +47,8 @@ We can go through few important points
 
 - Added [Rolling Deployment Support](https://docs.harness.io/article/vytf6s0kwc-ecs-deployment-tutorial#define_the_rolling_deployment_steps)
 - Revamped the [Canary Deployment Behavior](https://docs.harness.io/article/vytf6s0kwc-ecs-deployment-tutorial#ecs_canary_deployments)
+#### ECS Run Task Revamped in ECS 2.0
+- Introduced new configuration yaml ECS Run Task Request Definition as input in ECS Run Task Step.
 
 #### Infrastructure Definitions
 
@@ -269,6 +271,9 @@ loadBalancers:
     }
 }
 ```
+### ECS Run Task Request Definition Supported Fields
+Supported schema details can be found here
+https://docs.aws.amazon.com/AmazonECS/latest/APIReference/API_RunTask.html
 
 ### Infrastructure Definitions
 
