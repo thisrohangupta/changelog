@@ -17,9 +17,9 @@ In Harness CD 2.0, we have revamped our Template Library Experience. Templates a
 - User's can create Templates at the project, org or account level
 
 - Harness supports various types of templates and they can be leveraged in a Pipeline:
-  1. Step Template
-  2. Stage Template
-  3. Pipeline Template
+  1. [Step Template](https://github.com/thisrohangupta/changelog/tree/master/cd-core/templates#step-templates)
+  2. [Stage Template](https://github.com/thisrohangupta/changelog/tree/master/cd-core/templates#stage-templates)
+  3. [Pipeline Template](https://github.com/thisrohangupta/changelog/tree/master/cd-core/templates#pipeline-templates)
 
 - When creating a template users will need to provide a unique identifier for each template, irrespective of the type of template.
 
@@ -309,6 +309,7 @@ pipeline:
 - Pipeline templates can reference Stage Templates at the same object level or higher.
 - Pipeline Templates can be managed in the [Harness Git Experience](https://docs.harness.io/article/xl028jo9jk-git-experience-overview)
 - Steps and Stages are un-editable when its linked to a pipeline in a project. The user needs to go to the studio to change the template configuration
+- When designing the Pipeline Template, the intent is to provide all the parameters up front in the template. When you leverage it in a Pipeline, the content is already baked in and the user can just use it as is. User's cannot customize on top of Pipeline Template.
 
 #### Sample Pipeline Template
 
