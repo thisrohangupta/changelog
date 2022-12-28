@@ -12,6 +12,17 @@ In Harness CD 2.0, we have revamped our Template Library Experience. Templates a
 - You can copy the configuration of a template and forgoe linking it
   - **WARNING: If you do not link a template, then you cannot enforce the stable version**
 
+## Creating Templates
+
+- User's can create Templates at the project, org or account level
+
+- Harness supports various types of templates and they can be leveraged in a Pipeline:
+  1. Step Template
+  2. Stage Template
+  3. Pipeline Template
+
+- When creating a template users will need to provide a unique identifier for each template, irrespective of the type of template.
+
 ### Difference between Copy and Use Template in the Harness UI
 
 #### Copy Template Option
