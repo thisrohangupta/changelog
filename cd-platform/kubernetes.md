@@ -1,6 +1,4 @@
-# Kubernetes Deployment Support
-
-## Kubernetes Apply Step
+# Kubernetes Apply Step
 
 - The Kubernetes apply step allows users to apply specific kuberntes manifest files within their Kubernetes Service's Manifest Repository.
 
