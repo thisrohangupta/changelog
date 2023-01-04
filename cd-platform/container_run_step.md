@@ -6,7 +6,142 @@
 - The user can provide their own dockerimage and Harness will pull the image with the dependencies and perform the task
 - [Nomad Public Docker Image](https://hub.docker.com/r/djenriquez/nomad): `docker pull djenriquez/nomad`
 
-### Server Side Nomad Docker Commands
+### Sample DockerFile
+
+*From Github Repo*: https://github.com/multani/docker-nomad 
+
+```DockerFile
+FROM alpine:3.17.0
+
+SHELL ["/bin/ash", "-x", "-c", "-o", "pipefail"]
+
+# Based on https://github.com/djenriquez/nomad
+LABEL maintainer="Jonathan Ballet <jon@multani.info>"
+
+RUN addgroup nomad \
+ && adduser -S -G nomad nomad \
+ && mkdir -p /nomad/data \
+ && mkdir -p /etc/nomad \
+ && chown -R nomad:nomad /nomad /etc/nomad
+
+# Allow to fetch artifacts from TLS endpoint during the builds and by Nomad after.
+# Install timezone data so we can run Nomad periodic jobs containing timezone information
+RUN apk --update --no-cache add \
+        ca-certificates \
+        dumb-init \
+        libcap \
+        tzdata \
+        su-exec \
+  && update-ca-certificates
+
+# https://github.com/sgerrand/alpine-pkg-glibc/releases
+ARG GLIBC_VERSION=2.34-r0
+
+ADD https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub /etc/apk/keys/sgerrand.rsa.pub
+ADD https://github.com/sgerrand/alpine-pkg-glibc/releases/download/${GLIBC_VERSION}/glibc-${GLIBC_VERSION}.apk \
+    glibc.apk
+RUN apk add --no-cache --force-overwrite \
+        glibc.apk \
+ && rm glibc.apk
+
+# https://releases.hashicorp.com/nomad/
+ARG NOMAD_VERSION=1.4.3
+
+ADD https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/nomad_${NOMAD_VERSION}_linux_amd64.zip \
+    nomad_${NOMAD_VERSION}_linux_amd64.zip
+ADD https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/nomad_${NOMAD_VERSION}_SHA256SUMS \
+    nomad_${NOMAD_VERSION}_SHA256SUMS
+ADD https://releases.hashicorp.com/nomad/${NOMAD_VERSION}/nomad_${NOMAD_VERSION}_SHA256SUMS.sig \
+    nomad_${NOMAD_VERSION}_SHA256SUMS.sig
+RUN apk add --no-cache --virtual .nomad-deps gnupg \
+  && GNUPGHOME="$(mktemp -d)" \
+  && export GNUPGHOME \
+  && gpg --keyserver pgp.mit.edu --keyserver keys.openpgp.org --keyserver keyserver.ubuntu.com --recv-keys "C874 011F 0AB4 0511 0D02 1055 3436 5D94 72D7 468F" \
+  && gpg --batch --verify nomad_${NOMAD_VERSION}_SHA256SUMS.sig nomad_${NOMAD_VERSION}_SHA256SUMS \
+  && grep nomad_${NOMAD_VERSION}_linux_amd64.zip nomad_${NOMAD_VERSION}_SHA256SUMS | sha256sum -c \
+  && unzip -d /bin nomad_${NOMAD_VERSION}_linux_amd64.zip \
+  && chmod +x /bin/nomad \
+  && rm -rf "$GNUPGHOME" nomad_${NOMAD_VERSION}_linux_amd64.zip nomad_${NOMAD_VERSION}_SHA256SUMS nomad_${NOMAD_VERSION}_SHA256SUMS.sig \
+  && apk del .nomad-deps
+
+EXPOSE 4646 4647 4648 4648/udp
+
+COPY start.sh /usr/local/bin/
+
+ENTRYPOINT ["/usr/local/bin/start.sh"]
+```
+
+### Sample Start.sh
+
+```Shell
+#!/usr/bin/dumb-init /bin/sh
+# Script created following Hashicorp's model for Consul: 
+# https://github.com/hashicorp/docker-consul/blob/master/0.X/docker-entrypoint.sh
+# Comments in this file originate from the project above, simply replacing 'Consul' with 'Nomad'.
+set -e
+
+# Note above that we run dumb-init as PID 1 in order to reap zombie processes
+# as well as forward signals to all processes in its session. Normally, sh
+# wouldn't do either of these functions so we'd leak zombies as well as do
+# unclean termination of all our sub-processes.
+
+# NOMAD_DATA_DIR is exposed as a volume for possible persistent storage. The
+# NOMAD_CONFIG_DIR isn't exposed as a volume but you can compose additional
+# config files in there if you use this image as a base, or use NOMAD_LOCAL_CONFIG
+# below.
+NOMAD_DATA_DIR=${NOMAD_DATA_DIR:-"/nomad/data"}
+NOMAD_CONFIG_DIR=${NOMAD_CONFIG_DIR:-"/etc/nomad"}
+
+# You can also set the NOMAD_LOCAL_CONFIG environemnt variable to pass some
+# Nomad configuration JSON without having to bind any volumes.
+if [ -n "$NOMAD_LOCAL_CONFIG" ]; then
+    echo "$NOMAD_LOCAL_CONFIG" > "$NOMAD_CONFIG_DIR/local.json"
+fi
+
+# If the user is trying to run Nomad directly with some arguments, then
+# pass them to Nomad.
+if [ "${1:0:1}" = '-' ]; then
+    set -- nomad "$@"
+fi
+
+# Look for Nomad subcommands.
+if [ "$1" = 'agent' ]; then
+    shift
+    set -- nomad agent \
+        -data-dir="$NOMAD_DATA_DIR" \
+        -config="$NOMAD_CONFIG_DIR" \
+        "$@"
+elif [ "$1" = 'version' ]; then
+    # This needs a special case because there's no help output.
+    set -- nomad "$@"
+elif nomad --help "$1" 2>&1 | grep -q "nomad $1"; then
+    # We can't use the return code to check for the existence of a subcommand, so
+    # we have to use grep to look for a pattern in the help output.
+    set -- nomad "$@"
+fi
+
+# If we are running Nomad, make sure it executes as the proper user.
+if [ "$1" = 'nomad' ] && [ -z "${NOMAD_DISABLE_PERM_MGMT+x}" ]; then
+    # If the data or config dirs are bind mounted then chown them.
+    # Note: This checks for root ownership as that's the most common case.
+    if [ "$(stat -c %u $NOMAD_DATA_DIR)" != "$(id -u root)" ]; then
+        chown root:root $NOMAD_DATA_DIR
+    fi
+
+    # If requested, set the capability to bind to privileged ports before
+    # we drop to the non-root user. Note that this doesn't work with all
+    # storage drivers (it won't work with AUFS).
+    if [ -n ${NOMAD+x} ]; then
+        setcap "cap_net_bind_service=+ep" /bin/nomad
+    fi
+
+    set -- su-exec root "$@"
+fi
+
+exec "$@"
+```
+
+#### Server Side Nomad Docker Commands
 
 ```SHELL
 docker run -d \
@@ -32,7 +167,7 @@ docker run -d \
 djenriquez/nomad:v0.6.0 agent
 ```
 
-### Client Side Nomad Docker Commands
+#### Client Side Nomad Docker Commands
 
 ```SHELL
 docker run -d \
@@ -57,7 +192,7 @@ docker run -d \
 djenriquez/nomad:v0.6.0 agent
 ```
 
-### Store the Nomad File in Github
+#### Store the Nomad File in Github
 
 ```nomad
 job "example" {
