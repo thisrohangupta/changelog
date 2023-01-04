@@ -5,10 +5,13 @@
 - Harness offers a container step to let you run any user defined workload via a container in a Kubernetes Cluster
 - The user can provide their own dockerimage and Harness will pull the image with the dependencies and perform the task
 - [Nomad Public Docker Image](https://hub.docker.com/r/djenriquez/nomad): `docker pull djenriquez/nomad`
+- Sample Github Repos to build off:
+    1. <https://github.com/jdxlabs/hello-nomad>
+    2. <https://github.com/multani/docker-nomad>
 
 ### Sample DockerFile
 
-*From Github Repo*: https://github.com/multani/docker-nomad 
+*From Github Repo*:
 
 ```DockerFile
 FROM alpine:3.17.0
