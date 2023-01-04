@@ -121,7 +121,7 @@ job "example" {
 }
 ```
 
-### Container Run Step Nomad File Sample
+### Container Run Step Nomad File Sample Deploy Step
 
 ```YAML
 step:
@@ -145,3 +145,53 @@ step:
                                         cpu: 1
                                         memory: 500Mi
 ```
+
+#### Nomad Container Plugin Step - Get Deployment Status
+
+```YAML
+step:
+                    type: Container
+                    name: nomad deploy status
+                    identifier: nomad_deploy_status
+                    timeout: 10m
+                    spec:
+                        command: |-
+                            nomad job status -region east example
+                        image: djenriquez/nomad:v0.6.0
+                        shell: sh
+                        infrastructure: 
+                            type: KubernetesDirect
+                            spec:
+                                connectorRef: ab.asd
+                                namespace: default
+                                resources:
+                                    limits:
+                                        cpu: 1
+                                        memory: 500Mi
+```
+
+
+#### Nomad Container Plugin Step - Unblock Nomad Deployyment
+
+```YAML
+step:
+                    type: Container
+                    name: nomad deploy unblock
+                    identifier: nomad_deploy_unblock
+                    timeout: 10m
+                    spec:
+                        command: |-
+                            nomad deployment unblock -region east f08122e5
+                        image: djenriquez/nomad:v0.6.0
+                        shell: sh
+                        infrastructure: 
+                            type: KubernetesDirect
+                            spec:
+                                connectorRef: ab.asd
+                                namespace: default
+                                resources:
+                                    limits:
+                                        cpu: 1
+                                        memory: 500Mi
+```
+
