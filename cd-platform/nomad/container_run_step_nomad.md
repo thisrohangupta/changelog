@@ -270,7 +270,7 @@ step:
                     spec:
                         command: |-
                             git clone https://github.com/thisrohangupta/nomadSample.git
-                            nomad job run ./multi.nomad
+                            nomad job run ./multiregion.hcl
                         image: djenriquez/nomad:v0.6.0
                         shell: sh
                         infrastructure: 
