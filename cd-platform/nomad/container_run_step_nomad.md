@@ -333,3 +333,9 @@ step:
                                         memory: 500Mi
 ```
 
+
+#### Pre-Requisites
+
+1. Docker Image with Nomad and Client Properties installed in it, or are exposed as environment params we can inject in.
+2. The Job will be spun up in Kubernetes Cluster as a pod - so K8s Cluster needed
+3. A Delegate that can access the nomad infrastructure 
