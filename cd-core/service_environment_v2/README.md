@@ -23,7 +23,7 @@ All new deployment swimlanes (ECS, Deployment Template, SSH, WinRM, etc.) are on
 ### IMPACT
 
 - Existing Users and Projects in the UI
-- There is no impact on your existing pipelines using V1 services and environments. Post 1/31/2023, when you create a new stage, in an existing pipeline, - V2 experience will be the default.
+- There is no impact on your existing pipelines using V1 services and environments. Post 1/31/2023, when you create a new stage, in an existing pipeline, V2 experience will be the default.
 - Please note that any new services and environments that are created in Harness will be on the new V2 experience.
 
 ### API
@@ -31,7 +31,7 @@ All new deployment swimlanes (ECS, Deployment Template, SSH, WinRM, etc.) are on
 Harness introduced two new APIs to support the V2 Experience. The API reference is shared in the Document Resources/API Documentation section.
 
 - <https://apidocs.harness.io/tag/Environments#operation/createEnvironmentV2>
-h- ttps://apidocs.harness.io/tag/Services#operation/createServiceV2
+- <https://apidocs.harness.io/tag/Services#operation/createServiceV2>
 
 ### TERRAFORM AUTOMATION
 
@@ -48,8 +48,8 @@ Customers will need to update their service/environment automation to use V2 API
 ### Please read this before Upgrade
 
 - Service V1 and Environment V1 APIs are being deprecated on March 2023.
-- Existing pipelines referencing Service V1 and Environment V1 will run the risk of failure and no longer work after March 2023.
-- Harness will globally enable Service and Environments V2 APIs for all clients at the end of January 2023. T
+- Existing pipelines referencing Service V1 and Environment V1 will run the risk of failure after March 2023.
+- Harness will globally enable Service and Environments V2 APIs for all clients at the end of January 2023.
 - The forced change is needed to reduce the migration effort needed for users
 - Harness has an automated tool to help migrate your services and environments from the v1 to v2
 
@@ -57,14 +57,14 @@ Customers will need to update their service/environment automation to use V2 API
 
 ### Service
 
-- Services now has a definition that needs to be configured via API or UI in order to use the service in a Pipeline
+- Services now have a definition that needs to be configured via API or UI in order to use the service in a Pipeline
 - The Service Definition is a firm configuration that is mapped to the Service irrespective of the Pipeline it's being referenced in
 - Documentation on Service V2: <https://docs.harness.io/article/9ryi1ay01f-services-and-environments-overview#creating_v2_services>
 - The Service object is now removed from the Pipeline and is a stand alone object that contains 3 things:
 
 ```text
 1. Name, Description, Tag, Identifier [Same as Service V1 Experience]
-2. Manifests, Artifacts [The Service Manifests and the artifacts are now mapped in the Service object, they are moved out of the pipeline definition
+2. Manifests, Artifacts, Config Files [The Service Manifests and the artifacts are now mapped in the Service object, they are moved out of the pipeline definition
 3. Service Variables - Variables are now associated with the Service and can be used for override
 ```
 
