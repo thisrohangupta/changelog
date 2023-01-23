@@ -50,6 +50,12 @@ service:
 
 - There are no major YAML Changes to the Service object when it's configured at the account or organization level.
 
+### API and Terraform Changes
+
+```TEXT
+TO BE DOCUMENTED
+```
+
 ### The benefits
 
 - User's don't have as many similar or identical services to manage at the project level because the same service can be referenced accross multiple projects
@@ -69,4 +75,6 @@ service:
 
 - Based on RBAC, the user's selection to pick a service will be scoped to what permissions the user has access to (i.e. `runtime`, `view`)
 
-## Account and Organization Service
+## Account and Organization Environment
+
+Environments can now
