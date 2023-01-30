@@ -58,5 +58,3 @@ template:
 - As of 1.30.2022 - Harness only supports Step Group Templates inline, we are working to provide a remote template support.
 
 
-Referencing the Template in a Pipeline
-
