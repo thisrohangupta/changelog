@@ -77,4 +77,10 @@ TO BE DOCUMENTED
 
 ## Account and Organization Environment
 
-Environments can now
+Environments can now be created at the Account and Organization level. This includes the Infrastructure Definitions and Service Overrides.
+
+### Configuration 
+
+There isn't any major configuration changes when configuring an Environment at the Org or Account level. When user's define an account level environment, the
+
+
