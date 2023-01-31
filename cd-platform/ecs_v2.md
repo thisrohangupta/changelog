@@ -349,6 +349,12 @@ To understand how this configuration works, please refer to [AWS documentation](
 - Need to add task family in task definiton
 - Need to add service name, desired count in Service Definition Manifest. In First Gen, these are are part of Step. 
 - Load balancer configuration if present need to be mapped manually from 'ECS Service Setup' step in First Gen to 'Service Defintion' manifest in NG.
+```YAML
+loadBalancers:
+- targetGroupArn: arn:aws:elasticloadbalancing:us-east-1:806630305776:targetgroup/sainath-tg-recent-1/c63fdbef1bfc0ac2
+  containerName: nginx
+  containerPort: 80 
+```
 - 'Same as already running instances' config need to set based on First Gen Configuration.
 - In Scaling Policy, Scalable Target keys in json need to start with lower case alphabets. In First Gen, they are upper case alphabets.
 - ECS Run Task Request Definition need to be manually configured in Next Gen. This manifest is not present in Current Gen at all.
