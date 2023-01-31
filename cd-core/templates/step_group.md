@@ -5,6 +5,7 @@
 - User's can customize the configuration of the Step Group Template in the Template Studio
 - It can be used with Harness CIE and CD. 
 - User's can manage the access to the Step Group Template via the Access Control settings for Templates
+- Harness supports both inline and remote Step Group Templates
 
 
 ## Step Group Template YAML Sample
@@ -53,8 +54,5 @@ template:
   versionLabel: "1.0"
 ```
 
-## Limitations
-
-- As of 1.30.2022 - Harness only supports Step Group Templates inline, we are working to provide a remote template support.
 
 
