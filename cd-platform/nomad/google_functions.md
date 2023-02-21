@@ -11,7 +11,7 @@
 
 - User's can perform Blue-Green and Canary Deployments
 - Harness leverages the Revisions capability that Google Cloud offers to configure Rollback
-- Harness' can perform traffic shifting for Blue Green and Canary based deployments in GEN 2
+- Harness' can perform traffic shifting for Blue Green and Canary based deployments only in GEN 2
 
 ### Limitations
 
@@ -119,7 +119,7 @@ environment:
 
 #### Creating an Infrastructure Definition
 
-User's will need a GCP Connector with the permissions to deploy google functions in GCP. Below is a Sample Infrastructure Definition. User's can pick an existing connector or create a new one from scratch. 
+User's will need a GCP Connector with the permissions to deploy google functions in GCP.User's can pick an existing connector or create a new one from scratch. Below is a Sample Infrastructure Definition.
 
 ```YAML
 infrastructureDefinition:
@@ -139,3 +139,27 @@ infrastructureDefinition:
   allowSimultaneousDeployments: false
 
 ```
+
+#### Basic Deployment
+
+User's can select the Basic Deployment Execution Strategy. Harness will provide the Deploy Function Step on the Pipeline studio. The Deploy Function Command will deploy the new function and by default will route 100% traffic over to the newly deployed function.
+
+The Step YAML looks like below:
+
+```YAML
+              - step:
+                  name: Deploy Cloud Function
+                  identifier: deployCloudFunction
+                  type: DeployCloudFunction
+                  timeout: 10m
+                  spec:
+                    updateFieldMask: ""
+```
+
+#### Canary Deployment
+
+
+#### Blue-Green Deployment
+
+
+#### Rollback Function
