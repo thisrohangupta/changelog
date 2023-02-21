@@ -212,6 +212,7 @@ Harness will provide a [Step Group](https://developer.harness.io/docs/continuous
 ```
 
 Harness will deploy the staged function with 0% traffic. User's can incrementally or do a full cutover by routing the older revisions traffic to the newly deployed stage.
+
 #### Rollback Function
 
 Harness will offer the Rollback functionality out of the box. The Harness Rollback capabilities are based of the [Revisions](https://cloud.google.com/run/docs/managing/revisions) available in Google Cloud for the particular function.
