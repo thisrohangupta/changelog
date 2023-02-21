@@ -158,8 +158,72 @@ The Step YAML looks like below:
 
 #### Canary Deployment
 
+Harness will provide a [Step Group](https://developer.harness.io/docs/continuous-delivery/cd-technical-reference/cd-gen-ref-category/step-groups/) that will perform the Canary Deployment. Sample YAML for the Canary Deployment Step Group below. Harness knows how to route the traffic from the existing function to the newly deployed function.
+
+```YAML
+             - stepGroup:
+                  name: Canary Deployment
+                  identifier: canaryDepoyment
+                  steps:
+                    - step:
+                        name: Deploy Cloud Function With No Traffic
+                        identifier: deployCloudFunctionWithNoTraffic
+                        type: DeployCloudFunctionWithNoTraffic
+                        timeout: 10m
+                        spec: {}
+                    - step:
+                        name: Cloud Function Traffic Shift
+                        identifier: cloudFunctionTrafficShiftFirst
+                        type: CloudFunctionTrafficShift
+                        timeout: 10m
+                        spec:
+                          trafficPercent: 10
+                    - step:
+                        name: Cloud Function Traffic Shift
+                        identifier: cloudFunctionTrafficShiftSecond
+                        type: CloudFunctionTrafficShift
+                        timeout: 10m
+                        spec:
+                          trafficPercent: 100
+```
+
 
 #### Blue-Green Deployment
 
+Harness will provide a [Step Group](https://developer.harness.io/docs/continuous-delivery/cd-technical-reference/cd-gen-ref-category/step-groups/) that will perform the Blue Green Deployment. Below is a sample YAML snippet of the Blue-Green Deployment step group.
 
+```YAML
+                  name: Blue Green Deployment
+                  identifier: blueGreenDepoyment
+                  steps:
+                    - step:
+                        name: Deploy Cloud Function With No Traffic
+                        identifier: deployCloudFunctionWithNoTraffic
+                        type: DeployCloudFunctionWithNoTraffic
+                        timeout: 10m
+                        spec: {}
+                    - step:
+                        name: Cloud Function Traffic Shift
+                        identifier: cloudFunctionTrafficShift
+                        type: CloudFunctionTrafficShift
+                        timeout: 10m
+                        spec:
+                          trafficPercent: 100
+```
+
+Harness will deploy the staged function with 0% traffic. User's can incrementally or do a full cutover by routing the older revisions traffic to the newly deployed stage.
 #### Rollback Function
+
+Harness will offer the Rollback functionality out of the box. The Harness Rollback capabilities are based of the [Revisions](https://cloud.google.com/run/docs/managing/revisions) available in Google Cloud for the particular function.
+
+Sample YAML for the step, no user configuration required
+
+```YAML
+              - step:
+                  name: Rollback Cloud Function
+                  identifier: cloudFunctionRollback
+                  type: CloudFunctionRollback
+                  timeout: 10m
+                  spec: {}
+```
+
