@@ -15,7 +15,7 @@
 
 ### Limitations
 
-- Google Functions GEN 2 doesn't support [Google Cloud Source Repository](https://cloud.google.com/functions/docs/deploy#from-source-repo)
+- Google Functions GEN 2 doesn't support yet [Google Cloud Source Repository](https://cloud.google.com/functions/docs/deploy#from-source-repo)
 
 
 ### Quick Start
