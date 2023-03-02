@@ -311,7 +311,7 @@ Any changes done in the UI will need to be reconciled and updated in the YAML in
 
 ## Onboarding an Environment
 
-For onboarding an Environment, we recommend using the environment resource in our [Harness Terraform Provider](https://registry.terraform.io/providers/harness/harness/latest/docs/resources/platform_environment). In Harness, you can create an[Environment](https://developer.harness.io/docs/continuous-delivery/onboard-cd/cd-concepts/services-and-environments-overview/) at the Project, Organization and Account Level.
+For onboarding an Environment, we recommend using the environment resource in our [Harness Terraform Provider](https://registry.terraform.io/providers/harness/harness/latest/docs/resources/platform_environment). In Harness, you can create an [Environment](https://developer.harness.io/docs/continuous-delivery/onboard-cd/cd-concepts/services-and-environments-overview/) at the Project, Organization and Account Level.
 
 Your will need to create this YAML and store it in your Github Repository.
 
@@ -371,11 +371,40 @@ resource "harness_platform_environment" "environment" {
 }
 ```
 
-
 ## Onbarding an Infrastructure Definition
 
+For onboarding an Environment, we recommend using the infrastructure definition in our [Harness Terraform Provider](https://registry.terraform.io/providers/harness/harness/latest/docs/resources/platform_environment). In Harness, you can create an [Infrastructure Definition](https://developer.harness.io/docs/continuous-delivery/onboard-cd/cd-concepts/services-and-environments-overview/) at the Project, Organization and Account Level. Infrastructure Definitions are associated with the environment, so you will need to create an environment before creating the infrastructure definition.
 
-## Onboarding and Managing Connectors
+```YAML
+resource "harness_platform_infrastructure" "infrastructure" {
+  identifier      = "identifier"
+  name            = "name"
+  org_id          = "orgIdentifer"
+  project_id      = "projectIdentifier"
+  env_id          = "environmentIdentifier"
+  type            = "KubernetesDirect"
+  deployment_type = "Kubernetes"
+  yaml            = <<-EOT
+        infrastructureDefinition:
+         name: name
+         identifier: identifier
+         description: ""
+         tags:
+           asda: ""
+         orgIdentifier: orgIdentifer
+         projectIdentifier: projectIdentifier
+         environmentRef: environmentIdentifier
+         deploymentType: Kubernetes
+         type: KubernetesDirect
+         spec:
+          connectorRef: account.gfgf
+          namespace: asdasdsa
+          releaseName: release-<+INFRA_KEY>
+          allowSimultaneousDeployments: false
+      EOT
+}
+```
+
 
 
 ## Sample Pipeline to Setup
@@ -383,6 +412,10 @@ resource "harness_platform_environment" "environment" {
 You will need to create a pipeline that creates and updates the resources in Harness. Here are some docs to get started on constructing the Pipeline:
 
 ### For Building a Pipeline
+
+For help building Pipelines, Harness offers a starter guide in our developer hub to build a pipeline in our Product User Interface. 
+
+- [Pipeline Building Starter Guide](https://developer.harness.io/docs/continuous-delivery/onboard-cd/cd-quickstarts/kubernetes-cd-quickstart/)
 
 ### For Stage Configuration
 
@@ -393,7 +426,6 @@ You will need to create a pipeline that creates and updates the resources in Har
 ### Sample Pipeline Setup
 
 Below is a sample pipeline to create the nginx service and manage it via Git automation. You will also need to configure a Github Webhook Trigger to initiate updates to the service and automate the pipeline execution to update and create services. 
-
 
 ```YAML
 pipeline:
@@ -478,7 +510,7 @@ trigger:
       spec:
         type: Push
         spec:
-          connectorRef: ProductManagementRohan
+          connectorRef: ProductManagementRohan ## Replace this with your Connector
           autoAbortPreviousExecutions: false
           payloadConditions:
             - key: targetBranch
@@ -494,8 +526,25 @@ trigger:
 
 ## Best Practices
 
+We recommend starting out in the Harness User Interface to get familiar with all the constructions. Once you understand the relationships and the heirarchy you can then begin to automate the creation and management of these resources.
+
+Please review these topics to get familiar with the Harness constructs:
+
+- [Harness Key Concepts](https://developer.harness.io/docs/getting-started/learn-harness-key-concepts)
+- [Projects, Orgs, Account](https://developer.harness.io/docs/platform/organizations-and-projects/projects-and-organizations/)
+- [Service, Environments](https://developer.harness.io/docs/continuous-delivery/onboard-cd/cd-concepts/services-and-environments-overview/)
+
+### Create a project for resource automation
+
+We recommend two approaches:
+1. Creating a centralized project that you can give your end user developers access to onboard their own services and resources 
+
+2. Create 1 Project that has Have a centralized platform team manage and onboard the app team services, environments and configurations.
 
 
+### Get the Delegate operationalized
+
+### Create the Connectors and Secrets first
 
 
 
