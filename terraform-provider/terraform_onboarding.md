@@ -380,7 +380,19 @@ resource "harness_platform_environment" "environment" {
 
 ## Sample Pipeline to Setup
 
-Below is a sample pipeline to create the nginx service and manage it via Git automation. You will also need to configure a Github Webhook Trigger to initiate updates to the service and automate the pipeline execution to update and create services.
+You will need to create a pipeline that creates and updates the resources in Harness. Here are some docs to get started on constructing the Pipeline:
+
+### For Building a Pipeline
+
+### For Stage Configuration
+
+- [Custom Stage](https://developer.harness.io/docs/platform/pipelines/add-a-custom-stage/)
+- [Terraform Plan Step](https://developer.harness.io/docs/continuous-delivery/cd-advanced/terraform-category/run-a-terraform-plan-with-the-terraform-plan-step/)
+- [Terraform Apply Step](https://developer.harness.io/docs/continuous-delivery/cd-advanced/terraform-category/run-a-terraform-plan-with-the-terraform-apply-step)
+
+### Sample Pipeline Setup
+
+Below is a sample pipeline to create the nginx service and manage it via Git automation. You will also need to configure a Github Webhook Trigger to initiate updates to the service and automate the pipeline execution to update and create services. 
 
 
 ```YAML
@@ -434,7 +446,17 @@ pipeline:
 
 ```
 
-Sample Trigger to fire off the pipeline:
+### Sample Trigger Setup
+
+Below is a sample trigger to fire off the pipeline. We recommend using the [Github Webhook](https://developer.harness.io/docs/platform/pipelines/w_pipeline-steps-reference/triggers-reference/) trigger because you can make changes in Github and based of a branch condition, push, pull request, issue comment, etc. you can fire off the pipeline to make changes. The trigger doesn't need to be Github.
+
+We support:
+
+- Github
+- Gitlab
+- Bitbucket
+
+For more information on triggers please see our [docs](https://developer.harness.io/docs/platform/triggers/trigger-pipelines-using-custom-payload-conditions/)
 
 ```YAML
 trigger:
