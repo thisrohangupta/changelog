@@ -6,6 +6,8 @@ Usually, Harness users leverage the Terraform Provider to help automate scale th
 
 You can navigate to our Terraform Module Offering in the [HashiCorp Terrafrom Registry](https://registry.terraform.io/providers/harness/harness/latest/docs). Select the 'NextGen' Resources drop down to see all the resources we support with our Terraform Provider for the Harness Platform.
 
+For this topic we have provided a [sample repository](https://github.com/thisrohangupta/harness)
+
 ## Onboarding Automation
 
 We have some basics to help user's get started with the Harness Terraform Provider covered in our [Terraform Provider Quickstart](https://developer.harness.io/docs/platform/Terraform/harness-terraform-provider). In order to get started with Harness Terraform Provider automation, we recommend user's installing a delegate with the Terraform CLI configured. We will need this to build out the automation pipelines to create the various resources
@@ -238,6 +240,7 @@ infrastructure/
 -- prod_k8s.tf 
 ```
 
+
 ### Store the automation pipeline
 
 Harness recommends storing the automation pipeline to create and manage resources in a common project that many teams can access. You can create a project called "Onboarding" and users can leverage this to run the pipeline to create a service, environment, infrastructure definition, secret, etc.
@@ -246,7 +249,9 @@ The other alternative is to create pipeline templates that teams can use in thei
 
 ## Onboarding a Service
 
-For onboarding a Service onto Harness you will need to use the [Harness Terraform Resource](https://registry.terraform.io/providers/harness/harness/latest/docs/resources/platform_service).
+For onboarding a Service onto Harness you will need to use the [Harness Terraform Resource](https://registry.terraform.io/providers/harness/harness/latest/docs/resources/platform_service). In Harness, you can create a [service](https://developer.harness.io/docs/continuous-delivery/onboard-cd/cd-concepts/services-and-environments-overview/) at the project, organization or account level.
+
+
 
 Your will need to create this YAML and store it in your Github Repository.
 
@@ -255,8 +260,8 @@ resource "harness_platform_service" "service" {
   identifier  = "nginx" ## Service Identifier
   name        = "nginx" ## Service Name to appear in Harness
   description = "sample nginx app created via Harness terraform Provider"  
-  org_id      = "default" ## Replace with Harness Org Identifier for the resource
-  project_id  = "cdproduct" ## Replace with your Harness Project Identifier
+  org_id      = "default" ## Replace with Harness Org Identifier for the resource, optional if creating at account level
+  project_id  = "cdproduct" ## Replace with your Harness Project Identifier, optional if creating at org or account level. This project is where the service will be created
   yaml = <<-EOT
                 service:
                   name: nginx ## Service Name (same as above)
@@ -300,14 +305,170 @@ resource "harness_platform_service" "service" {
 }
 ```
 
+When you define your Service via Terraform, it's a one way sync. You are defining the Service in Git via Terraform, and on a commit of a change we will trigger a Harness Pipeline to provision the changes for your account. The pipeline will end up creating a service for you. Any changes you do via Git will propagate to the UI via this Pipeline which will fetch the service Terraform file definition.
+
+Any changes done in the UI will need to be reconciled and updated in the YAML in order to protect against configuration mismatch. We recommend when using the terraform provider to manage services, you should use Git only to make your changes. We can have [RBAC](https://developer.harness.io/docs/platform/role-based-access-control/rbac-in-harness/) in place to prevent the editting and creation of services in the Harness UI.
+
 ## Onboarding an Environment
+
+For onboarding an Environment, we recommend using the environment resource in our [Harness Terraform Provider](https://registry.terraform.io/providers/harness/harness/latest/docs/resources/platform_environment). In Harness, you can create an[Environment](https://developer.harness.io/docs/continuous-delivery/onboard-cd/cd-concepts/services-and-environments-overview/) at the Project, Organization and Account Level.
+
+Your will need to create this YAML and store it in your Github Repository.
+
+```YAML
+resource "harness_platform_environment" "environment" {
+  identifier = "dev" ## Define Environment Identifier, this is unique to the project, org or account - where the environment will be created
+  name       = "dev" ## This will be the name of the environment that you will see in Harness UI
+  org_id     = "default" ## Optional if your creating at Account level
+  project_id = "cdproduct" ## optional if your creating at Org or Acount
+  tags       = ["status:nonregulated", "owner:devops"]
+  type       = "PreProduction"
+  yaml = <<-EOT
+    environment:
+         name: dev ## Name of the environment, similar to above
+         identifier: dev ## Name of the environment
+         orgIdentifier: default  
+         projectIdentifier: cdproduct ## optional if your creating at Org or Acount, this is where the environment will be created
+         type: PreProduction
+         tags:
+           status: nonregulated
+           owner: devops
+         variables: ## You can configure global environment variable overides here
+           - name: port
+             type: String
+             value: 8080
+             description: "Default Port for Dev Environment"
+           - name: db_url
+             type: String
+             value: "https://postrges:8080"
+             description: "postgress url"
+         overrides: ## You can configure global environment overrides here
+           manifests:
+             - manifest:
+                 identifier: manifestEnv
+                 type: Values
+                 spec:
+                   store:
+                     type: Git
+                     spec:
+                       connectorRef: <+input>
+                       gitFetchType: Branch
+                       paths:
+                         - file1
+                       repoName: <+input>
+                       branch: master
+           configFiles: ## You can configure configuration file overrides here.
+             - configFile:
+                 identifier: configFileEnv
+                 spec:
+                   store:
+                     type: Harness
+                     spec:
+                       files:
+                         - account:/Add-ons/svcOverrideTest
+                       secretFiles: []
+      EOT
+}
+```
 
 
 ## Onbarding an Infrastructure Definition
 
 
+## Onboarding and Managing Connectors
+
+
 ## Sample Pipeline to Setup
 
+Below is a sample pipeline to create the nginx service and manage it via Git automation. You will also need to configure a Github Webhook Trigger to initiate updates to the service and automate the pipeline execution to update and create services.
+
+
+```YAML
+pipeline:
+  name: Onboarding Service
+  identifier: Deploy_Sample_Pipeline
+  projectIdentifier: Rohan
+  orgIdentifier: default
+  tags: {}
+  stages:
+    - stage:
+        name: Create and Update Service
+        identifier: Create_and_Update_Service
+        description: Create and update a service from Github
+        type: Custom
+        spec:
+          execution:
+            steps:
+              - step:
+                  type: TerraformPlan
+                  name: Service Create and Update Plan
+                  identifier: Service_Create_and_Update_Plan
+                  spec:
+                    configuration:
+                      command: Apply
+                      configFiles:
+                        store:
+                          type: Github
+                          spec:
+                            gitFetchType: Branch
+                            connectorRef: ProductManagementRohan
+                            branch: main
+                            folderPath: service/nginx.tf
+                            repoName: harness
+                        moduleSource:
+                          useConnectorCredentials: true
+                      secretManagerRef: harnessSecretManager
+                    provisionerIdentifier: service
+                  timeout: 10m
+              - step:
+                  type: TerraformApply
+                  name: Create and Update Service
+                  identifier: Create_and_Update_Service
+                  spec:
+                    configuration:
+                      type: InheritFromPlan
+                    provisionerIdentifier: service
+                  timeout: 10m
+        tags: {}
+  description: This Pipeline is dedicated to onboarding services in Harness
+
+```
+
+Sample Trigger to fire off the pipeline:
+
+```YAML
+trigger:
+  name: Create and Update Service
+  identifier: Create_and_Update_Service
+  enabled: true
+  encryptedWebhookSecretIdentifier: ""
+  description: ""
+  tags: {}
+  orgIdentifier: default
+  projectIdentifier: Rohan
+  pipelineIdentifier: Deploy_Sample_Pipeline_1677582489497
+  source:
+    type: Webhook
+    pollInterval: "0"
+    webhookId: ""
+    spec:
+      type: Github
+      spec:
+        type: Push
+        spec:
+          connectorRef: ProductManagementRohan
+          autoAbortPreviousExecutions: false
+          payloadConditions:
+            - key: targetBranch
+              operator: Equals
+              value: main
+          headerConditions: []
+          repoName: harness
+          actions: []
+  inputYaml: |
+    pipeline: {}
+
+```
 
 ## Best Practices
 
