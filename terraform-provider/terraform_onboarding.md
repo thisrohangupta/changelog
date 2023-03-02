@@ -259,8 +259,8 @@ resource "harness_platform_service" "service" {
   project_id  = "cdproduct" ## Replace with your Harness Project Identifier
   yaml = <<-EOT
                 service:
-                  name: name
-                  identifier: identifier
+                  name: nginx ## Service Name (same as above)
+                  identifier: nginx ## Service Identifier, needs to be same as above
                   serviceDefinition:
                     spec:
                       manifests:
@@ -271,14 +271,14 @@ resource "harness_platform_service" "service" {
                               store:
                                 type: Github
                                 spec:
-                                  connectorRef: <+input>
+                                  connectorRef: <+input> ## This is a connector in your account, project or Org to fetch source code
                                   gitFetchType: Branch
                                   paths:
-                                    - files1
-                                  repoName: <+input>
+                                    - /deploy/
+                                  repoName: <+input> ## For an account level git connector, you can provide the Repo Name
                                   branch: master
                               skipResourceVersioning: false
-                      configFiles:
+                      configFiles: ## This block is optional, this is for config files like a python script or json file you want to attach to the service
                         - configFile:
                             identifier: configFile1
                             spec:
@@ -287,13 +287,13 @@ resource "harness_platform_service" "service" {
                                 spec:
                                   files:
                                     - <+org.description>
-                      variables:
-                        - name: var1
+                      variables: ## These are service variables you can define
+                        - name: port
                           type: String
-                          value: val1
-                        - name: var2
+                          value: 8080
+                        - name: namespace
                           type: String
-                          value: val2
+                          value: <+service.name>-<+env.name>
                     type: Kubernetes
                   gitOpsEnabled: false
               EOT
@@ -303,10 +303,10 @@ resource "harness_platform_service" "service" {
 ## Onboarding an Environment
 
 
-##  Onbarding an Infrastructure Definition
+## Onbarding an Infrastructure Definition
 
 
-##  Sample Pipeline to Setup
+## Sample Pipeline to Setup
 
 
 ## Best Practices
