@@ -562,7 +562,7 @@ We recommend two approaches:
 
 You should get started by creating a centralized project like below:
 
-![Project](./terraform-provider/assets/project.png)
+![Project](https://github.com/thisrohangupta/changelog/blob/28b85395f7f70b01749e3de3da9078c7930b265d/terraform-provider/assets/project.png)
 
 You can also create this via the Terraform Provider and manage it via the Terraform Provider in code
 
