@@ -413,6 +413,9 @@ resource "harness_platform_infrastructure" "infrastructure" {
 
 Infrastructure Definitions are associated with the environment, so you will need to create an environment before creating the infrastructure definition.
 
+When you run your automation pipeline and apply the terraform for the infrastructure definition you will see it appear in the UI like so:
+
+![Infrastructure Definition](https://github.com/thisrohangupta/changelog/blob/master/terraform-provider/assets/infrastructure.png)
 ## Sample Pipeline to Setup
 
 You will need to create a pipeline that creates and updates the resources in Harness. Here are some docs to get started on constructing the Pipeline:
@@ -429,7 +432,7 @@ For help building Pipelines, Harness offers a starter guide in our developer hub
 - [Terraform Plan Step](https://developer.harness.io/docs/continuous-delivery/cd-advanced/terraform-category/run-a-terraform-plan-with-the-terraform-plan-step/)
 - [Terraform Apply Step](https://developer.harness.io/docs/continuous-delivery/cd-advanced/terraform-category/run-a-terraform-plan-with-the-terraform-apply-step)
 
-### Sample Pipeline Setup
+### Sample Pipeline Setup for Service Creation
 
 Below is a sample pipeline to create the nginx service and manage it via Git automation. You will also need to configure a Github Webhook Trigger to initiate updates to the service and automate the pipeline execution to update and create services.
 
