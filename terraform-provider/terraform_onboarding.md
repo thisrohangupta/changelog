@@ -595,11 +595,37 @@ These options are all available in the [Harness Docs](https://developer.harness.
 
  Make sure the [connectors](https://developer.harness.io/docs/first-gen/firstgen-platform/account/manage-connectors/harness-connectors/) are created in Harness. You can create them and manage them via the [Terraform Provider](https://registry.terraform.io/providers/harness/harness/latest/docs/resources/platform_connector_github) or in the UI.
 
- 
+![Connector](https://github.com/thisrohangupta/changelog/blob/master/terraform-provider/assets/connector.png)
 
+Below is a sample snippet for creating a connector via the Terraform Provider:
 
+```YAML
+resource "harness_platform_connector_helm" "helm" {
+  identifier  = "bitnami"
+  name        = "bitnami"
+  description = "bitnami helm connector"
+  tags        = ["owner:dev"]
 
+  url                = "hhttps://charts.bitnami.com/bitnami"
+  delegate_selectors = ["harness-delegate"]
+}
+```
 
  These connectors will require [secrets](https://developer.harness.io/docs/platform/Security/harness-secret-manager-overview) to be configured because connectors are access objects that provide the Harness delegate access to a particular resource. You can create the connectors via the [Terraform Provider](https://registry.terraform.io/providers/harness/harness/latest/docs/resources/platform_secret_text) or in the Harness UI.
 
+![Secret](https://github.com/thisrohangupta/changelog/blob/master/terraform-provider/assets/secret.png)
 
+Below is a sample snippet for creating a secret text via the Terraform Provider:
+
+```YAML
+resource "harness_platform_secret_text" "secret" {
+  identifier  = "github_pat"
+  name        = "github pat"
+  description = "github personal access token"
+  tags        = ["owner:dev"]
+
+  secret_manager_identifier = "harnessSecretManager"
+  value_type                = "Inline"
+  value                     = "secret"
+}
+```
