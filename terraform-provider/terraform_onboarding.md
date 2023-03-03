@@ -373,37 +373,40 @@ resource "harness_platform_environment" "environment" {
 
 ## Onbarding an Infrastructure Definition
 
-For onboarding an Environment, we recommend using the infrastructure definition in our [Harness Terraform Provider](https://registry.terraform.io/providers/harness/harness/latest/docs/resources/platform_environment). In Harness, you can create an [Infrastructure Definition](https://developer.harness.io/docs/continuous-delivery/onboard-cd/cd-concepts/services-and-environments-overview/) at the Project, Organization and Account Level. Infrastructure Definitions are associated with the environment, so you will need to create an environment before creating the infrastructure definition.
+For onboarding an Environment, we recommend using the infrastructure definition in our [Harness Terraform Provider](https://registry.terraform.io/providers/harness/harness/latest/docs/resources/platform_environment). In Harness, you can create an [Infrastructure Definition](https://developer.harness.io/docs/continuous-delivery/onboard-cd/cd-concepts/services-and-environments-overview/) at the Project, Organization and Account Level.
+
 
 ```YAML
 resource "harness_platform_infrastructure" "infrastructure" {
-  identifier      = "identifier"
-  name            = "name"
-  org_id          = "orgIdentifer"
-  project_id      = "projectIdentifier"
-  env_id          = "environmentIdentifier"
+  identifier      = "dev"
+  name            = "devk8s"
+  org_id          = "default"
+  project_id      = "cdproduct"
+  env_id          = "dev"
   type            = "KubernetesDirect"
   deployment_type = "Kubernetes"
   yaml            = <<-EOT
         infrastructureDefinition:
-         name: name
-         identifier: identifier
-         description: ""
+         name: dev-k8s
+         identifier: devk8s
+         description: "development kubernetes cluster"
          tags:
-           asda: ""
-         orgIdentifier: orgIdentifer
-         projectIdentifier: projectIdentifier
-         environmentRef: environmentIdentifier
+           owner: "devops"
+         orgIdentifier: default
+         projectIdentifier: cdproduct
+         environmentRef: dev
          deploymentType: Kubernetes
          type: KubernetesDirect
          spec:
-          connectorRef: account.gfgf
-          namespace: asdasdsa
+          connectorRef: devkubernetes ### Replace with your connector
+          namespace: dev
           releaseName: release-<+INFRA_KEY>
           allowSimultaneousDeployments: false
       EOT
 }
 ```
+
+Infrastructure Definitions are associated with the environment, so you will need to create an environment before creating the infrastructure definition.
 
 
 
@@ -499,8 +502,8 @@ trigger:
   description: ""
   tags: {}
   orgIdentifier: default
-  projectIdentifier: Rohan
-  pipelineIdentifier: Deploy_Sample_Pipeline_1677582489497
+  projectIdentifier: cdproduct
+  pipelineIdentifier: Deploy_Sample_Pipeline
   source:
     type: Webhook
     pollInterval: "0"
@@ -537,12 +540,26 @@ Please review these topics to get familiar with the Harness constructs:
 ### Create a project for resource automation
 
 We recommend two approaches:
+
 1. Creating a centralized project that you can give your end user developers access to onboard their own services and resources 
 
-2. Create 1 Project that has Have a centralized platform team manage and onboard the app team services, environments and configurations.
-
+2. Create 1 Project that has a centralized platform team manage and onboard the app team services, environments and  other configurations.
 
 ### Get the Delegate operationalized
+
+- We recommend for production grade delegate installation, to build your own delegate image and deploy it
+- When you build your own delegate image, you get to customize all the tooling you want installed on it. 
+- [Harness offers Instructions to build your own delegate image](https://developer.harness.io/docs/platform/Delegates/customize-delegates/build-custom-delegate-images-with-third-party-tools)
+
+Tooling you should install:
+
+- `kubectl`
+
+- `helm`
+
+- `terraform`
+
+
 
 ### Create the Connectors and Secrets first
 
