@@ -246,6 +246,75 @@ Harness recommends storing the automation pipeline to create and manage resource
 
 The other alternative is to create pipeline templates that teams can use in their project. This lets a central team manage the pipelines for onboarding and distribute them to the app teams to leverage and onboard.
 
+## Sample Pipeline to Setup
+
+Below is the flow to get the automation setup in Harness:
+
+1. Create a Pipeline
+2. Create a Trigger for a Git based source
+3. Create a terraform resource file of a Harness object
+4. Commit the object
+5. See the Pipeline execute
+6. Look in the Harness account where resource was configured to be created.
+
+### For Building a Pipeline
+
+For help building Pipelines, Harness offers a starter guide in our developer hub to build a pipeline in our Product User Interface.
+
+- [Pipeline Building Starter Guide](https://developer.harness.io/docs/continuous-delivery/onboard-cd/cd-quickstarts/kubernetes-cd-quickstart/)
+
+### For Stage Configuration
+
+- [Custom Stage](https://developer.harness.io/docs/platform/pipelines/add-a-custom-stage/)
+- [Terraform Plan Step](https://developer.harness.io/docs/continuous-delivery/cd-advanced/terraform-category/run-a-terraform-plan-with-the-terraform-plan-step/)
+- [Terraform Apply Step](https://developer.harness.io/docs/continuous-delivery/cd-advanced/terraform-category/run-a-terraform-plan-with-the-terraform-apply-step)
+
+### Sample Trigger Setup
+
+Below is a sample trigger to fire off the pipeline. We recommend using the [Github Webhook](https://developer.harness.io/docs/platform/pipelines/w_pipeline-steps-reference/triggers-reference/) trigger because you can make changes in Github and based of a branch condition, push, pull request, issue comment, etc. you can fire off the pipeline to make changes. The trigger doesn't need to be Github.
+
+We support:
+
+- Github
+- Gitlab
+- Bitbucket
+
+For more information on triggers please see our [docs](https://developer.harness.io/docs/platform/triggers/trigger-pipelines-using-custom-payload-conditions/)
+
+```YAML
+trigger:
+  name: Create and Update Service
+  identifier: Create_and_Update_Service
+  enabled: true
+  encryptedWebhookSecretIdentifier: ""
+  description: ""
+  tags: {}
+  orgIdentifier: default
+  projectIdentifier: cdproduct
+  pipelineIdentifier: Deploy_Sample_Pipeline
+  source:
+    type: Webhook
+    pollInterval: "0"
+    webhookId: ""
+    spec:
+      type: Github
+      spec:
+        type: Push
+        spec:
+          connectorRef: ProductManagementRohan ## Replace this with your Connector
+          autoAbortPreviousExecutions: false
+          payloadConditions:
+            - key: targetBranch
+              operator: Equals
+              value: main
+          headerConditions: []
+          repoName: harness
+          actions: []
+  inputYaml: |
+    pipeline: {}
+
+```
+
 
 ## Onboarding a Service
 
@@ -310,6 +379,73 @@ Any changes done in the UI will need to be reconciled and updated in the YAML in
 When you run an automation pipeline to create service, you will see the service created in the UI like so:
 
 ![Service](https://github.com/thisrohangupta/changelog/blob/master/terraform-provider/assets/service.png)
+
+### Sample Pipeline Setup for Service Creation
+
+Below is a sample pipeline to create the nginx service and manage it via Git automation. You will also need to configure a Github Webhook Trigger to initiate updates to the service and automate the pipeline execution to update and create services.
+
+```YAML
+pipeline:
+  name: Onboarding Service
+  identifier: Deploy_Sample_Pipeline
+  projectIdentifier: Rohan
+  orgIdentifier: default
+  tags: {}
+  stages:
+    - stage:
+        name: Create and Update Service
+        identifier: Create_and_Update_Service
+        description: Create and update a service from Github
+        type: Custom
+        spec:
+          execution:
+            steps:
+              - step:
+                  type: TerraformPlan
+                  name: Service Create and Update Plan
+                  identifier: Service_Create_and_Update_Plan
+                  spec:
+                    configuration:
+                      command: Apply
+                      configFiles:
+                        store:
+                          type: Github
+                          spec:
+                            gitFetchType: Branch
+                            connectorRef: ProductManagementRohan
+                            branch: main
+                            folderPath: service/nginx.tf
+                            repoName: harness
+                        moduleSource:
+                          useConnectorCredentials: true
+                      secretManagerRef: harnessSecretManager
+                    provisionerIdentifier: service
+                  timeout: 10m
+              - step:
+                  type: TerraformApply
+                  name: Create and Update Service
+                  identifier: Create_and_Update_Service
+                  spec:
+                    configuration:
+                      type: InheritFromPlan
+                    provisionerIdentifier: service
+                  timeout: 10m
+        tags: {}
+  description: This Pipeline is dedicated to onboarding services in Harness
+
+```
+
+The Terraform Plan Step can be configured like so:
+
+![Terraform Plan](https://github.com/thisrohangupta/changelog/blob/master/terraform-provider/assets/terraformplan.png)
+
+The Terraform Apply Step can Inherit the plan and create or update the service resource
+
+![Terraform Apply](https://github.com/thisrohangupta/changelog/blob/master/terraform-provider/assets/terraformapply.png)
+
+The overall pipeline will look something like below:
+
+![Pipeline](https://github.com/thisrohangupta/changelog/blob/master/terraform-provider/assets/Pipeline.png)
 
 ## Onboarding an Environment
 
@@ -377,6 +513,57 @@ When you run an automation pipeline to create environments, you will see the env
 
 ![Environment](https://github.com/thisrohangupta/changelog/blob/master/terraform-provider/assets/environment.png)
 
+### Sample Pipeline to Onboard Environments
+
+```YAML
+pipeline:
+  name: Onboarding Environments
+  identifier: Create_Environment_Pipeline
+  projectIdentifier: cdproduct
+  orgIdentifier: default
+  tags: {}
+  stages:
+    - stage:
+        name: Create and Update Environment
+        identifier: Create_and_Update_Environment
+        description: Create and update a environment from Github
+        type: Custom
+        spec:
+          execution:
+            steps:
+              - step:
+                  type: TerraformPlan
+                  name: Service Create and Update Plan
+                  identifier: Service_Create_and_Update_Plan
+                  spec:
+                    configuration:
+                      command: Apply
+                      configFiles:
+                        store:
+                          type: Github
+                          spec:
+                            gitFetchType: Branch
+                            connectorRef: <+input>
+                            branch: main
+                            folderPath: environments/dev.tf
+                        moduleSource:
+                          useConnectorCredentials: true
+                      secretManagerRef: harnessSecretManager
+                    provisionerIdentifier: environment
+                  timeout: 10m
+              - step:
+                  type: TerraformApply
+                  name: Create and Update Service
+                  identifier: Create_and_Update_Service
+                  spec:
+                    configuration:
+                      type: InheritFromPlan
+                    provisionerIdentifier: environment
+                  timeout: 10m
+        tags: {}
+  description: This Pipeline is dedicated to onboarding environments in Harness
+```
+
 ## Onbarding an Infrastructure Definition
 
 For onboarding an Environment, we recommend using the infrastructure definition in our [Harness Terraform Provider](https://registry.terraform.io/providers/harness/harness/latest/docs/resources/platform_environment). In Harness, you can create an [Infrastructure Definition](https://developer.harness.io/docs/continuous-delivery/onboard-cd/cd-concepts/services-and-environments-overview/) at the Project, Organization and Account Level.
@@ -416,46 +603,29 @@ Infrastructure Definitions are associated with the environment, so you will need
 When you run your automation pipeline and apply the terraform for the infrastructure definition you will see it appear in the UI like so:
 
 ![Infrastructure Definition](https://github.com/thisrohangupta/changelog/blob/master/terraform-provider/assets/infrastructure.png)
-## Sample Pipeline to Setup
 
-You will need to create a pipeline that creates and updates the resources in Harness. Here are some docs to get started on constructing the Pipeline:
-
-### For Building a Pipeline
-
-For help building Pipelines, Harness offers a starter guide in our developer hub to build a pipeline in our Product User Interface.
-
-- [Pipeline Building Starter Guide](https://developer.harness.io/docs/continuous-delivery/onboard-cd/cd-quickstarts/kubernetes-cd-quickstart/)
-
-### For Stage Configuration
-
-- [Custom Stage](https://developer.harness.io/docs/platform/pipelines/add-a-custom-stage/)
-- [Terraform Plan Step](https://developer.harness.io/docs/continuous-delivery/cd-advanced/terraform-category/run-a-terraform-plan-with-the-terraform-plan-step/)
-- [Terraform Apply Step](https://developer.harness.io/docs/continuous-delivery/cd-advanced/terraform-category/run-a-terraform-plan-with-the-terraform-apply-step)
-
-### Sample Pipeline Setup for Service Creation
-
-Below is a sample pipeline to create the nginx service and manage it via Git automation. You will also need to configure a Github Webhook Trigger to initiate updates to the service and automate the pipeline execution to update and create services.
+### Sample Pipeline to Onboard Infrastructure Definitions
 
 ```YAML
 pipeline:
-  name: Onboarding Service
-  identifier: Deploy_Sample_Pipeline
-  projectIdentifier: Rohan
+  name: Onboarding Infrastructure Definition
+  identifier: Create_Infrastructure_Pipeline
+  projectIdentifier: cdproduct
   orgIdentifier: default
   tags: {}
   stages:
     - stage:
-        name: Create and Update Service
-        identifier: Create_and_Update_Service
-        description: Create and update a service from Github
+        name: Create and Update Infrastructure
+        identifier: Create_and_Update_Infrastructure
+        description: Create and update a Infrastructure from Github
         type: Custom
         spec:
           execution:
             steps:
               - step:
                   type: TerraformPlan
-                  name: Service Create and Update Plan
-                  identifier: Service_Create_and_Update_Plan
+                  name: Infrastructure Create and Update Plan
+                  identifier: Infrastructure_Create_and_Update_Plan
                   spec:
                     configuration:
                       command: Apply
@@ -464,86 +634,25 @@ pipeline:
                           type: Github
                           spec:
                             gitFetchType: Branch
-                            connectorRef: ProductManagementRohan
+                            connectorRef: <+input>
                             branch: main
-                            folderPath: service/nginx.tf
-                            repoName: harness
+                            folderPath: infrastructure/devk8s.tf
                         moduleSource:
                           useConnectorCredentials: true
                       secretManagerRef: harnessSecretManager
-                    provisionerIdentifier: service
+                    provisionerIdentifier: infra
                   timeout: 10m
               - step:
                   type: TerraformApply
-                  name: Create and Update Service
-                  identifier: Create_and_Update_Service
+                  name: Create and Update Infrastructure
+                  identifier: Create_and_Update_Infrastructure
                   spec:
                     configuration:
                       type: InheritFromPlan
-                    provisionerIdentifier: service
+                    provisionerIdentifier: infra
                   timeout: 10m
         tags: {}
-  description: This Pipeline is dedicated to onboarding services in Harness
-
-```
-
-The Terraform Plan Step can be configured like so:
-
-![Terraform Plan](https://github.com/thisrohangupta/changelog/blob/master/terraform-provider/assets/terraformplan.png)
-
-The Terraform Apply Step can Inherit the plan and create or update the service resource
-
-![Terraform Apply](https://github.com/thisrohangupta/changelog/blob/master/terraform-provider/assets/terraformapply.png)
-
-
-The overall pipeline will look something like below:
-
-![Pipeline](https://github.com/thisrohangupta/changelog/blob/master/terraform-provider/assets/Pipeline.png)
-
-### Sample Trigger Setup
-
-Below is a sample trigger to fire off the pipeline. We recommend using the [Github Webhook](https://developer.harness.io/docs/platform/pipelines/w_pipeline-steps-reference/triggers-reference/) trigger because you can make changes in Github and based of a branch condition, push, pull request, issue comment, etc. you can fire off the pipeline to make changes. The trigger doesn't need to be Github.
-
-We support:
-
-- Github
-- Gitlab
-- Bitbucket
-
-For more information on triggers please see our [docs](https://developer.harness.io/docs/platform/triggers/trigger-pipelines-using-custom-payload-conditions/)
-
-```YAML
-trigger:
-  name: Create and Update Service
-  identifier: Create_and_Update_Service
-  enabled: true
-  encryptedWebhookSecretIdentifier: ""
-  description: ""
-  tags: {}
-  orgIdentifier: default
-  projectIdentifier: cdproduct
-  pipelineIdentifier: Deploy_Sample_Pipeline
-  source:
-    type: Webhook
-    pollInterval: "0"
-    webhookId: ""
-    spec:
-      type: Github
-      spec:
-        type: Push
-        spec:
-          connectorRef: ProductManagementRohan ## Replace this with your Connector
-          autoAbortPreviousExecutions: false
-          payloadConditions:
-            - key: targetBranch
-              operator: Equals
-              value: main
-          headerConditions: []
-          repoName: harness
-          actions: []
-  inputYaml: |
-    pipeline: {}
-
+  description: This Pipeline is dedicated to onboarding environments in Harness
 ```
 
 ## Best Practices
