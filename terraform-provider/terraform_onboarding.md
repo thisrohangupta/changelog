@@ -562,7 +562,7 @@ We recommend two approaches:
 
 You should get started by creating a centralized project like below:
 
-![Project](terraform-provider/assets/project.png)
+![Project](./terraform-provider/assets/project.png)
 
 You can also create this via the Terraform Provider and manage it via the Terraform Provider in code
 
