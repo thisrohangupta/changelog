@@ -309,7 +309,7 @@ Any changes done in the UI will need to be reconciled and updated in the YAML in
 
 When you run an automation pipeline to create service, you will see the service created in the UI like so:
 
-![Service](terraform-provider/assets/service.png)
+![Service](https://github.com/thisrohangupta/changelog/blob/master/terraform-provider/assets/service.png)
 
 ## Onboarding an Environment
 
@@ -375,7 +375,7 @@ resource "harness_platform_environment" "environment" {
 
 When you run an automation pipeline to create environments, you will see the environment created in the UI like so:
 
-![Environment](terraform-provider/assets/environment.png)
+![Environment](https://github.com/thisrohangupta/changelog/blob/master/terraform-provider/assets/environment.png)
 
 ## Onbarding an Infrastructure Definition
 
@@ -486,16 +486,17 @@ pipeline:
 
 The Terraform Plan Step can be configured like so:
 
-![Terraform Plan](terraform-provider/assets/terraformplan.png)
+![Terraform Plan](https://github.com/thisrohangupta/changelog/blob/master/terraform-provider/assets/terraformplan.png)
 
 The Terraform Apply Step can Inherit the plan and create or update the service resource
 
-![Terraform Apply](terraform-provider/assets/terraformapply.png)
+![Terraform Apply](https://github.com/thisrohangupta/changelog/blob/master/terraform-provider/assets/terraformapply.png)
 
 
 The overall pipeline will look something like below:
 
-![Pipeline](terraform-provider/assets/Pipeline.png)
+![Pipeline](https://github.com/thisrohangupta/changelog/blob/master/terraform-provider/assets/Pipeline.png)
+
 ### Sample Trigger Setup
 
 Below is a sample trigger to fire off the pipeline. We recommend using the [Github Webhook](https://developer.harness.io/docs/platform/pipelines/w_pipeline-steps-reference/triggers-reference/) trigger because you can make changes in Github and based of a branch condition, push, pull request, issue comment, etc. you can fire off the pipeline to make changes. The trigger doesn't need to be Github.
