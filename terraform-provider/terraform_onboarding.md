@@ -533,8 +533,8 @@ pipeline:
             steps:
               - step:
                   type: TerraformPlan
-                  name: Service Create and Update Plan
-                  identifier: Service_Create_and_Update_Plan
+                  name: Environment Create and Update Plan
+                  identifier: Environment_Create_and_Update_Plan
                   spec:
                     configuration:
                       command: Apply
@@ -553,8 +553,8 @@ pipeline:
                   timeout: 10m
               - step:
                   type: TerraformApply
-                  name: Create and Update Service
-                  identifier: Create_and_Update_Service
+                  name: Create and Update Environment
+                  identifier: Create_and_Update_Environment
                   spec:
                     configuration:
                       type: InheritFromPlan
