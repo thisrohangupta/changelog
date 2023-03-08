@@ -53,7 +53,7 @@ During Pipeline Execution you will see Harness fetch the subcharts and fetch the
 
 In the prepare section, we will run the template command with the `--dependency-update` flag.
 
-![Prepare Section](<img width="1491" alt="image" src="https://user-images.githubusercontent.com/52221549/223647251-f006522a-8ee3-429e-9003-d2d40e5031e0.png">
+![Prepare Section](<img width="1491" alt="image" src="https://user-images.githubusercontent.com/52221549/223647251-f006522a-8ee3-429e-9003-d2d40e5031e0.png">)
 
 
 
