@@ -9,6 +9,8 @@ In Helm, users can define dependencies and subcharts that they can reference in 
 
 Helm Subchart and Dependency Support is available for Kubernetes Deployment Types that are deploying Helm Charts as the Manifest source and our Native Helm Deployment Swimlane.
 
+## Service Configuration
+
 To Configure the subcharts, you will need to define them in your service. You will need to define the sub chart name which is a path to the chart that resides in the parent chart. Please ensure that all your sub-charts are located within the `charts/` folder inside your parent chart. 
 Sample dir:
 ```
@@ -21,13 +23,6 @@ charts/
 ```
 
 For any dependencies to be resolved, you will need to configure the Helm Command with a Flag `Template` with `--dependency-update` this will allow Harness to go fetch your dependencies that you have defined in your chart.yaml. 
-
-### Supported Swimlanes
-
-Harness supports Canary, Blue-Green and Rolling Deployments with the Helm Subcharts and Dependencies feature when deploying with Kubernetes. 
-
-Harness supports deploying a basic strategy with native Helm and the Helm Subchart and dependency capabilities.
-
 
 ### Sample Service YAML
 
@@ -66,6 +61,15 @@ service:
 
 ```
 
+
+### Supported Swimlanes
+
+Harness supports Canary, Blue-Green and Rolling Deployments with the Helm Subcharts and Dependencies feature when deploying with Kubernetes. 
+
+Harness supports deploying a basic strategy with native Helm and the Helm Subchart and dependency capabilities.
+
+
+### Pipeline Execution of a Helm Chart with Subcharts
 
 During Pipeline Execution you will see Harness fetch the subcharts and fetch the dependencies for deployment. In the fetch files section we will fetch the Subchart and show the fetched subchart in the fetched files collected.
 
