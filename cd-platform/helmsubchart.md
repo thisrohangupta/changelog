@@ -5,11 +5,20 @@
 This Feature is behind a Feature Flag, please contact Harness support to enable the flag.
 `Feature Flage Name: NG_CDS_HELM_SUB_CHARTS`
 
-In Helm, user's can define dependencies and subcharts that they can reference in their main Helm Chart. Helm will go download the dependencies and subcharts from existing repository or seperate repositories. 
+In Helm, users can define dependencies and subcharts that they can reference in their main Helm Chart. Helm will go download the dependencies and subcharts from existing repository or seperate repositories. 
 
 Helm Subchart and Dependency Support is available for Kubernetes Deployment Types that are deploying Helm Charts as the Manifest source and our Native Helm Deployment Swimlane.
 
-To Configure the subcharts, you will need define them in your service. You will need to define the sub chart name which is a path to the chart that resides in the parent chart.
+To Configure the subcharts, you will need to define them in your service. You will need to define the sub chart name which is a path to the chart that resides in the parent chart. Please ensure that all your sub-charts are located within the `charts/` folder inside your parent chart. 
+Sample dir:
+```
+charts/
+	- subchart1/
+		 - templates/
+			 - app.yaml
+		 - Chart.yaml
+		 - values.yaml
+```
 
 For any dependencies to be resolved, you will need to configure the Helm Command with a Flag `Template` with `--dependency-update` this will allow Harness to go fetch your dependencies that you have defined in your chart.yaml. 
 
