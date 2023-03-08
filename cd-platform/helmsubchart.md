@@ -1,6 +1,10 @@
 # Deploying Helm Charts with Dependencies and Subcharts
 
-## Use Cases
+## Introduction
+
+This Feature is behind a Feature Flag, please contact Harness support to enable the flag.
+`Feature Flage Name: NG_CDS_HELM_SUB_CHARTS`
+
 In Helm, user's can define dependencies and subcharts that they can reference in their main Helm Chart. Helm will go download the dependencies and subcharts from existing repository or seperate repositories. 
 
 Helm Subchart and Dependency Support is available for Kubernetes Deployment Types that are deploying Helm Charts as the Manifest source and our Native Helm Deployment Swimlane.
