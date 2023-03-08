@@ -44,3 +44,8 @@ service:
   gitOpsEnabled: false
 
 ```
+
+
+During Pipeline Execution you will see Harness fetch the subcharts and fetch the dependencies for deployment
+
+![Pipeline Execution] https://github.com/thisrohangupta/changelog/blob/86315629686631cc7de7c93aa70bdd9c215ebb39/images/Screenshot%202023-03-07%20at%2011.13.43%20PM.png
