@@ -46,6 +46,15 @@ service:
 ```
 
 
-During Pipeline Execution you will see Harness fetch the subcharts and fetch the dependencies for deployment
+During Pipeline Execution you will see Harness fetch the subcharts and fetch the dependencies for deployment. In the fetch files section we will fetch the Subchart and show the fetched subchart in the fetched files collected.
 
 ![Pipeline Execution](https://github.com/thisrohangupta/changelog/blob/86315629686631cc7de7c93aa70bdd9c215ebb39/images/Screenshot%202023-03-07%20at%2011.13.43%20PM.png)
+
+
+In the prepare section, we will run the template command with the `--dependency-update` flag.
+
+![Prepare Section](<img width="1491" alt="image" src="https://user-images.githubusercontent.com/52221549/223647251-f006522a-8ee3-429e-9003-d2d40e5031e0.png">
+
+
+
+
