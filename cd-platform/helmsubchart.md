@@ -12,6 +12,9 @@ Helm Subchart and Dependency Support is available for Kubernetes Deployment Type
 ## Service Configuration
 
 To Configure the subcharts, you will need to define them in your service. You will need to define the sub chart name which is a path to the chart that resides in the parent chart. Please ensure that all your sub-charts are located within the `charts/` folder inside your parent chart. 
+
+For a Harness Sample Repo: [check this out](https://github.com/thisrohangupta/custom-remote-test-repo/tree/main/parent-chart)
+
 Sample dir:
 ```
 charts/
