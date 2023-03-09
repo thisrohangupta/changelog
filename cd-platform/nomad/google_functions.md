@@ -97,7 +97,6 @@ service:
                 artifactPath: helloworld
               identifier: helloworld
               type: GoogleCloudStorage
-  gitOpsEnabled: false
 ```
 
 #### Creating an Environment
@@ -108,7 +107,7 @@ Users can pick an existing or create a new environment from scratch. The Sample 
 environment:
   name: dev-gcp
   identifier: dev
-  description: ""
+  description: "dev google cloud environment"
   tags: {}
   type: PreProduction
   orgIdentifier: default
@@ -125,7 +124,7 @@ User's will need a GCP Connector with the permissions to deploy google functions
 infrastructureDefinition:
   name: dev
   identifier: dev
-  description: ""
+  description: "dev google cloud infrastructure"
   tags: {}
   orgIdentifier: default
   projectIdentifier: serverlesstest
@@ -190,6 +189,8 @@ Harness will provide a [Step Group](https://developer.harness.io/docs/continuous
 
 #### Blue-Green Deployment
 
+Harness will deploy the staged function with 0% traffic. User's can incrementally or do a full cutover by routing the older revisions traffic to the newly deployed stage.
+
 Harness will provide a [Step Group](https://developer.harness.io/docs/continuous-delivery/cd-technical-reference/cd-gen-ref-category/step-groups/) that will perform the Blue Green Deployment. Below is a sample YAML snippet of the Blue-Green Deployment step group.
 
 ```YAML
@@ -216,6 +217,11 @@ Harness will deploy the staged function with 0% traffic. User's can incrementall
 #### Rollback Function
 
 Harness will offer the Rollback functionality out of the box. The Harness Rollback capabilities are based of the [Revisions](https://cloud.google.com/run/docs/managing/revisions) available in Google Cloud for the particular function.
+
+**Rollback**
+When a function is deployed the first time and if the step after fails which would trigger a rollback, then we delete the function.
+If the function already exists (revision 10) and a new revision is deployed during deploy(revision 11) but a step after deploy fails and rollback is triggered then Harness will deploy a new function revision (revision 12) but will contain the artifact and metadata for revision 10.
+
 
 Sample YAML for the step, no user configuration required
 
