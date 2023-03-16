@@ -17,7 +17,7 @@ Harness lets users define a service that represents their AWS Lambda Function th
 
 Harness supports deploying your AWS Lambda's that are packaged as `.zip` in S3 Buckets or as containers from `ECR`. These are the only two artifact sources AWS Cloud Provider supports today with AWS Lambda. 
 
-[AWS Lambda Artifact Sources](<img width="857" alt="image" src="https://user-images.githubusercontent.com/52221549/225522517-d2451973-e443-45e5-9969-d1abdff5d3a8.png">)
+[AWS Lambda Artifact Sources] (<img width="857" alt="image" src="https://user-images.githubusercontent.com/52221549/225522517-d2451973-e443-45e5-9969-d1abdff5d3a8.png">)
 
 
 ### Function Definition
