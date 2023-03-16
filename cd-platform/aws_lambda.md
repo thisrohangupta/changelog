@@ -124,7 +124,7 @@ User's will need to configure an Environment and Infrastructure Definition to te
 
 We will need an [AWS Connector](https://developer.harness.io/docs/platform/connectors/add-aws-connector/) to be able to connect to an AWS Account and specify a region to deploy. This connector will be used to deploy your Lambda and access the AWS cloud provider.
 
-**Sample Environment Definition**
+
 
 <img width="1512" alt="image" src="https://user-images.githubusercontent.com/52221549/225532637-ec71cb3a-556b-4422-9048-76c2e8722290.png">
 
@@ -144,7 +144,7 @@ environment:
 
 ```
 
-**Sample Infrastructure Definition**
+
 
 <img width="860" alt="image" src="https://user-images.githubusercontent.com/52221549/225532468-faafcc00-4e65-481e-bc3b-0a80a280c443.png">
 
