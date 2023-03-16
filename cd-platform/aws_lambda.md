@@ -126,6 +126,11 @@ We will need an [AWS Connector](https://developer.harness.io/docs/platform/conne
 
 **Sample Environment Definition**
 
+<img width="1512" alt="image" src="https://user-images.githubusercontent.com/52221549/225532637-ec71cb3a-556b-4422-9048-76c2e8722290.png">
+
+
+Below is the YAML Definition for Environment:
+
 ```YAML
 environment:
   name: aws
@@ -140,6 +145,10 @@ environment:
 ```
 
 **Sample Infrastructure Definition**
+
+<img width="860" alt="image" src="https://user-images.githubusercontent.com/52221549/225532468-faafcc00-4e65-481e-bc3b-0a80a280c443.png">
+
+Below is the YAML Definition for Infrastructure:
 
 ```YAML
 infrastructureDefinition:
@@ -161,7 +170,17 @@ infrastructureDefinition:
 
 ## Lambda Steps
 
+Harness offers various steps for users to consume for deployment. To deploy Lambda and manage rollback of Lambda, Harness offers two steps in particular:
+
+- Deploy Lambda Step
+- Rollback AWS Lambda Step
+
+<img width="560" alt="image" src="https://user-images.githubusercontent.com/52221549/225532995-354adc52-c76b-4574-9cce-416a031089c8.png">
+
+
 ### Lambda Deployment Steps
+
+<img width="457" alt="image" src="https://user-images.githubusercontent.com/52221549/225533065-a2253490-3f20-4087-897f-8fb7a408c6ab.png">
 
 
 Below is a YAML snippet of the Deploy Lambda Step. It requires minimal configuration because Harness handles the logic to deploy the artifact to the proper AWS Account and Region. Harness will deploy the Lambda function and automatically route the traffic from the old version of the Lambda function to the newly deployed one.
@@ -182,6 +201,8 @@ Below is a YAML snippet of the Deploy Lambda Step. It requires minimal configura
 
 ### Rollback Deploy Step
 
+<img width="452" alt="image" src="https://user-images.githubusercontent.com/52221549/225533147-15081d52-8b63-4fe9-b23c-b68cadaf4809.png">
+
 Below is the YAML snippet for the AWS Lambda Rollback Step. When a Pipeline fails, Harness will automatically rollback your Lambda function to the previous version using the Rollback step. Harness remembers the successful version of the AWS Lambda Service deployed and rollback for you. 
 
 ```YAML
@@ -192,6 +213,100 @@ Below is the YAML snippet for the AWS Lambda Rollback Step. When a Pipeline fail
                   type: AwsLambdaRollback
                   timeout: 10m
                   spec: {}
+```
+
+## Sample Pipeline 
+
+<img width="1512" alt="image" src="https://user-images.githubusercontent.com/52221549/225534374-5bf7cf90-91c7-4c31-a1f3-2bda4375b7f6.png">
+
+
+Below is a Sample Pipeline YAML that has been configured:
+
+```YAML
+pipeline:
+  name: lambda-deploy
+  identifier: lambdaDeploy
+  projectIdentifier: serverless
+  orgIdentifier: default
+  tags: {}
+  stages:
+    - stage:
+        name: deploy lambda
+        identifier: deploy
+        description: "deploy lambda"
+        type: Deployment
+        spec:
+          deploymentType: AwsLambda
+          service:
+            serviceRef: lambda
+            serviceInputs:
+              serviceDefinition:
+                type: AwsLambda
+                spec:
+                  artifacts:
+                    primary:
+                      primaryArtifactRef: <+input>
+                      sources: <+input>
+          environment:
+            environmentRef: aws
+            deployToAll: false
+            infrastructureDefinitions:
+              - identifier: awslambda
+          execution:
+            steps:
+              - step:
+                  name: Deploy Aws Lambda
+                  identifier: deployawslambda
+                  type: AwsLambdaDeploy
+                  timeout: 10m
+                  spec: {}
+                  when:
+                    stageStatus: Success
+                    condition: "false"
+                  failureStrategies: []
+              - step:
+                  type: ShellScript
+                  name: Echo Service variables
+                  identifier: ShellScript
+                  spec:
+                    shell: Bash
+                    onDelegate: true
+                    source:
+                      type: Inline
+                      spec:
+                        script: echo <+serviceVariables.workload_name>
+                    environmentVariables: []
+                    outputVariables: []
+                  timeout: 10m
+            rollbackSteps:
+              - step:
+                  name: Aws Lambda rollback
+                  identifier: awslambdarollback
+                  type: AwsLambdaRollback
+                  timeout: 10m
+                  spec: {}
+        tags: {}
+        failureStrategies:
+          - onFailure:
+              errors:
+                - AllErrors
+              action:
+                type: StageRollback
+
+```
+
+## Configuration via API
+
+User's can configure the Harness AWS Lambda Service Resource via API. Users will need to use the [Create Service API](https://apidocs.harness.io/tag/Services#operation/createServiceV2) and specify the service type to be `AwsLambda`
+
+## Configure via Terraform
+
+User's can configure the Harness AWS Lambda Service Resource via the Terraform Provider. Please use the [service platform resource in the NextGen Provider](https://registry.terraform.io/providers/harness/harness/latest/docs/resources/platform_service).
+
+
+
+
+         
 ```
 
 
