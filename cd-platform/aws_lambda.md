@@ -2,7 +2,9 @@
 
 ## Introduction
 
-Harness supports the deployment of AWS Lambda Functions. Below is a guide to get started on using the swimlane to deploy your Lambda functions through Harness CD! The swimlane only deploys the Lambda Function, it doesn't update any auxillary things like the API Gateway, or the Triggers etc. It's designed to empower developers to launch their Lambda code with ease without having to mess with the infrastructure components around AWS Lambda. Harness can deploy a new Lambda function or update an existing Lambda Function
+Harness supports the deployment of AWS Lambda Functions. Below is a guide to get started on using the swimlane to deploy your Lambda functions through Harness CD! The swimlane only deploys the Lambda Function, it doesn't update any auxillary things like the API Gateway, or the Triggers etc. It's designed to empower developers to launch their Lambda code with ease without having to mess with the infrastructure components around AWS Lambda. Harness can deploy a new Lambda function or update an existing Lambda Function.
+
+*Note: AWS native lambda feature is behind FF: `CDS_AWS_NATIVE_LAMBDA`*
 
 
 
