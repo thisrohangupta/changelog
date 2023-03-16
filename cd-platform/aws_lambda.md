@@ -305,10 +305,104 @@ User's can configure the Harness AWS Lambda Service Resource via API. Users will
 
 User's can configure the Harness AWS Lambda Service Resource via the Terraform Provider. Please use the [service platform resource in the NextGen Provider](https://registry.terraform.io/providers/harness/harness/latest/docs/resources/platform_service).
 
+service:
+  name: helloworld
+  identifier: helloworld
+  description: "Hello World AWS Lambda"
+  tags: {}
+  serviceDefinition:
+    spec:
+      manifests: # Harness introduces a function definition to define the properties of your AWS Lambda function
+        - manifest:
+            identifier: lambdaFunctionDefinition 
+            type: AwsLambdaFunctionDefinition
+            spec:
+              store:
+                type: Github
+                spec:
+                  connectorRef: rohitgithub
+                  gitFetchType: Branch
+                  paths:
+                    - serverless/aws-lambda/createFunction.json
+                  branch: master
+      artifacts: # The artifact is the packaged .zip or Docker image you wish to deploy to AWS
+        primary:
+          primaryArtifactRef: <+input>
+          sources:
+            - spec:
+                connectorRef: awscp
+                bucketName: sainathlambda
+                region: us-east-2
+                filePath: <+serviceVariables.workload_name>
+              identifier: test
+              type: AmazonS3
+      variables:
+        - name: workload_name
+          type: String
+          description: "sample variable definition"
+          value: workloadNameValue
+    type: AwsLambda
 
+```YAML
+resource "harness_platform_service" "service" {
+  identifier  = "helloworld"
+  name        = "hello-world lambda"
+  description = "lambda function"
+  org_id      = "default"
+  project_id  = "serverless"
 
+  yaml = <<-EOT
+            service:
+              name: helloworld
+              identifier: helloworld
+              description: "Hello World AWS Lambda"
+              tags: {}
+              serviceDefinition:
+                spec:
+                  manifests: # Harness introduces a function definition to define the properties of your AWS Lambda function
+                    - manifest:
+                        identifier: lambdaFunctionDefinition 
+                        type: AwsLambdaFunctionDefinition
+                        spec:
+                          store:
+                            type: Github
+                            spec:
+                              connectorRef: rohitgithub
+                              gitFetchType: Branch
+                              paths:
+                                - serverless/aws-lambda/createFunction.json
+                              branch: master
+                  artifacts: # The artifact is the packaged .zip or Docker image you wish to deploy to AWS
+                    primary:
+                      primaryArtifactRef: <+input>
+                      sources:
+                        - spec:
+                            connectorRef: awscp
+                            bucketName: sainathlambda
+                            region: us-east-2
+                            filePath: <+serviceVariables.workload_name>
+                          identifier: test
+                          type: AmazonS3
+                  variables:
+                    - name: workload_name
+                      type: String
+                      description: "sample variable definition"
+                      value: workloadNameValue
+                type: AwsLambda
+              EOT
+}
 
-         
 ```
+
+
+
+
+
+
+
+
+
+
+
 
 
