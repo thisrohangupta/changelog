@@ -40,11 +40,11 @@ For Harness First Gen CD vs Harness Next Gen CD here is the comparion matrix for
 | **Infrastructure Definition**  | Yes                       | No                 |
 | **Trigger**                    | Yes                       | No                 |
 | **Pipeline**                   | Yes                       | Yes                |
-| **Input Set**                  | No                        | Yes                |
-| **Workflow**                   | Yes                       | No                 |
+| **Input Set**                  | N/A                        | Yes                |
+| **Workflow**                   | Yes                       | N/A                 |
 | **Templates**                  | Yes                       | Yes                |
-| **Application**                | Yes                       | No                 |
-| **Infrastructure Provisioner** | Yes                       | No                 |
+| **Application**                | Yes                       | N/A                 |
+| **Infrastructure Provisioner** | Yes                       | N/A                 |
 
 
 ## Git Experience vs Config-as-Code FAQ
