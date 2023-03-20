@@ -1,0 +1,97 @@
+# Git Experience (Harness Next Gen CD) vs Configuration as Code (Harness First Gen CD)
+
+## What is Git Experience?
+
+- Harness will provide the choice to customers to decide where they want to store the config for their resources (Pipelines, Templates etc.) - In Git or In Harness DB
+
+- Even if the configs are stored in Git, customers will be able to leverage full capabilities of Harness UI to edit configs and store them back in Git
+
+Harness Configuration for the following resources can be stored in Git:
+
+- Pipelines
+- Templates (Pipeline, Stage, Step Group and Step)
+- Input Sets
+- Feature Flags
+
+In the Git Experience, Github is the source of truth for the Git backed objects. This means Harness doesn't maintain any record of those objects besides the pipeline name, identifier, and Git backed configuration to fetch the pipeline from Github. We do not do any reconciliation or cross sync'ing of the resources. 
+
+For more details on Git Experience in Harness Next Gen, please see our [overview](https://developer.harness.io/docs/platform/Git-Experience/git-experience-overview)
+
+
+## What is Configuration as Code?
+
+Configuration As Code allows you to configure Pipelines, Triggers, Workflows, Environments, and Services in Harness using YAML. Nearly everything you can do in the Harness First Gen platform GUI, you can do in YAML as well.
+
+All Harness Configurations can be added and managed in Git. Harness maintains a state of your git configuration in it's database and reads the changes from Git to update its local copy. It also takes changes from the UI and updates the DB record and syncs down to your Github.
+
+
+For More details on the Harness First Gen Configuration as Code please see our [overview](https://developer.harness.io/docs/first-gen/firstgen-platform/config-as-code/configuration-as-code)
+
+
+## Configuration as Code vs Git Experience Entity Support Matrix
+
+For Harness First Gen CD vs Harness Next Gen CD here is the comparion matrix for the Git Experience
+
+| **Feature**                    | **Configuration as Code** | **Git Experience** |
+|--------------------------------|---------------------------|--------------------|
+| **Service**                    | Yes                       | No                 |
+| **Service Definition**         | Yes                       | No                 |
+| **Environment**                | Yes                       | No                 |
+| **Infrastructure Definition**  | Yes                       | No                 |
+| **Trigger**                    | Yes                       | No                 |
+| **Pipeline**                   | Yes                       | Yes                |
+| **Input Set**                  | No                        | Yes                |
+| **Workflow**                   | Yes                       | No                 |
+| **Templates**                  | Yes                       | Yes                |
+| **Application**                | Yes                       | No                 |
+| **Infrastructure Provisioner** | Yes                       | No                 |
+
+
+## Git Experience vs Config-as-Code FAQ
+
+### What's the difference? 
+
+In First Gen, Harness retained a copy in its DB that was where Harness was reading all the configuration from. This meant user's would make changes in the UI or Github and they would all first go to the DB before showing up in their respective destinations (i.e. UI or Github). These frequent changes caused a lot of sync conflicts with Harness DB state and the user's Github. We designed the Git Experience so that it would have 1 source of truth which is Github. Harness will only read from Github and pull the latest or a specific branch. Harness gives more flexibility in branching strategies and testing Pipelines, Templates and Inputsets compared to the Harness First Gen Configuration as code experience. 
+
+### Why did Harness reduce the number of supported entities backed by Git?
+
+In the Harness First Gen, we had lots of Git Sync issues while maintaining the state of the correct and stable state of Harness objects like Service, Environment, Infrastructure Definitions, Workflows and Pipelines. As a result, user's would see their Git State being overwritten by Harness' current state which may not be the correct state. We decided to focus on our core platform entities Pipeline, Templates and Inputsets to provide a solid multi branch, multi version experience for users to manage their resources. For more details please see the following docs:
+
+- [Pipelines](https://developer.harness.io/docs/platform/git-experience/manage-a-harness-pipeline-repo-using-git-experience/)
+- [Input Set](https://developer.harness.io/docs/platform/Git-Experience/manage-input-sets-in-simplified-git-experience)
+- [Templates](https://developer.harness.io/docs/platform/Templates/templates-best-practices#remote-template-versioning)
+
+### Why are there no service, environments and infrastructure definitions backed by Git? 
+
+The Management of Service, Environments and Infrastructure definitions are no longer managed in one repo per application. Git Experience gives the flexibility to manage these resources in any repo and branch. 
+
+`Configuration as Code != Git Experience`
+
+It's a fundamentally different mechanism. A majority of our base didn't get much value at out of the configuration as code experience, and couldn't operationalize it at scale due to the frequent sync errors and conflicts. What happened was the birth of the Terraform Provider which allowed users to configure and manage resources in code via  Terraform.
+
+Pipelines, Templates and Input Sets are powerful constructs to manage in Git Experience but how often are users tweaking their services, environments and infrastructure definitions after initial configuration. It's minimal.
+
+User's want their Services, Environments and Infrastructure Objects in Git but operationally not as a DB record, they want to actually make tweaks and audit those changes via code. The terraform provider does that in a more consistent fashion. User's can purely manage their service and environments as code.
+
+Service, Environment, Infrastructure Definitions are Harness constructs that carry lots of dependencies on one another. The Git Experience doesn't restrict one to be in the location of the others, this results in the risk of breaking changes  to occur files that are dependent on others aren't automatically reconciled, and it doesnt  ensure the pipeline has the latest working changes (addition of variables, updating of pipeline, impacts to templates and inputsets being used with pipeline).
+
+### What is an alternative to manage these other objects in Github? 
+
+We recommend our user's leveraging the Harness Terraform Provider or our APIs to automate the management their Configuration in Harness like Services, Environments and Infrastructure Definitions. Terraform is an industry standard in how business manage and update their configuration as code. The Terraform Provider has been leveraged to manage these Harness resources as code via corresponding Terraform Configuration files. Users may have a module that just generates and updates services and they use a tfvars file to pass in the proper and configurable parameters. Using Harness pipelines, Harness can orchestrate the process to make the change reliably without any state conflict. Harness DB remains the source of truth for the UI while users can vet and publish changes via their automation.
+
+For our APIs we have user's building their own custom automation that lets them manage our  Harness configuration YAML in Git and pass it to the API call for creation and updating the configuration. We have seen user's create Harness Pipelines that integrate with our APIs or even build their own onboarding and automation applications (via containerized application or a set of serverless functions) to update and manage Harness configuration.
+
+Below are some key docs for our terraform provider:
+
+- [Terraform Provider Quickstart](https://developer.harness.io/docs/platform/terraform/harness-terraform-provider-overview/)
+- [Terraform Provider Automated Onboarding Guide](https://developer.harness.io/docs/platform/Terraform/automate-harness-onboarding)
+- [Terraform Provider Scaling Automation Guide](https://developer.harness.io/docs/platform/Terraform/advanced-terraform-onboarding)
+- [Terraform Registry for Harness Provider](https://registry.terraform.io/providers/harness/harness/latest/docs)
+
+
+Below are some doc:
+
+- [Harness API Quickstart](https://developer.harness.io/docs/platform/apis/api-quickstart/)
+- [API Docs](https://apidocs.harness.io/)
+
+
