@@ -84,7 +84,7 @@ The Management of Service, Environments and Infrastructure definitions are no lo
 
 It's a fundamentally different mechanism. A majority of our base didn't get much value at out of the configuration as code experience, and couldn't operationalize it at scale due to the frequent sync errors and conflicts. What happened was the birth of the Terraform Provider which allowed users to configure and manage resources in code via  Terraform.
 
-Pipelines, Templates and Input Sets are powerful constructs to manage in Git Experience but how often are users tweaking their services, environments and infrastructure definitions after initial configuration. It's minimal.
+Pipelines, Templates and Input Sets are powerful constructs to manage in Git Experience but how often are users tweaking their services, environments and infrastructure definitions after initial configuration. It's minimal these objects (service, environment, and infrastructure) are just metadata and pointers to a real service configuration.
 
 User's want their Services, Environments and Infrastructure Objects in Git but operationally not as a DB record, they want to actually make tweaks and audit those changes via code. The terraform provider does that in a more consistent fashion. User's can purely manage their service and environments as code.
 
