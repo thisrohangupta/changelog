@@ -6,7 +6,7 @@
 
 - Even if the configs are stored in Git, customers will be able to leverage full capabilities of Harness UI to edit configs and store them back in Git
 
-Harness Configuration for the following resources can be stored in Git:
+**Harness Configuration for the following resources can be stored in Git:**
 
 - Pipelines
 - Templates (Pipeline, Stage, Step Group and Step)
@@ -64,13 +64,15 @@ If we review the current offering in the market, we see that due to the nesting 
 
 ## Git Experience vs Config-as-Code FAQ
 
-### What's the difference? 
+### What's the difference?
 
 In First Gen, Harness retained a copy in its DB that was where Harness was reading all the configuration from. This meant user's would make changes in the UI or Github and they would all first go to the DB before showing up in their respective destinations (i.e. UI or Github). These frequent changes caused a lot of sync conflicts with Harness DB state and the user's Github. We designed the Git Experience so that it would have 1 source of truth which is Github. Harness will only read from Github and pull the latest or a specific branch. Harness gives more flexibility in branching strategies and testing Pipelines, Templates and Inputsets compared to the Harness First Gen Configuration as code experience.
 
 ### Why did Harness reduce the number of supported entities backed by Git?
 
-In the Harness First Gen, we had lots of Git Sync issues while maintaining the state of the correct and stable state of Harness objects like Service, Environment, Infrastructure Definitions, Workflows and Pipelines. As a result, user's would see their Git State being overwritten by Harness' current state which may not be the correct state. We decided to focus on our core platform entities Pipeline, Templates and Inputsets to provide a solid multi branch, multi version experience for users to manage their resources. For more details please see the following docs:
+In the Harness First Gen, we had lots of Git Sync issues while maintaining the state of the correct and stable state of Harness objects like Service, Environment, Infrastructure Definitions, Workflows and Pipelines. As a result, user's would see their Git State being overwritten by Harness' current state which may not be the correct state. We decided to focus on our core platform entities Pipeline, Templates and Inputsets to provide a solid multi branch, multi version experience for users to manage their resources.
+
+**For more details please see the following docs:**
 
 - [Pipelines](https://developer.harness.io/docs/platform/git-experience/manage-a-harness-pipeline-repo-using-git-experience/)
 - [Input Set](https://developer.harness.io/docs/platform/Git-Experience/manage-input-sets-in-simplified-git-experience)
@@ -137,4 +139,3 @@ Below are some doc:
 We recommend leveraging the Harness Git Experience to manage the Pipelines, Input Sets and Templates. These are the core "Pipeline as Code" constructs that we offer with our platform. They can be updated and audited in Github and user's can make changes to them. Harness will reflect the changes in its User Interface. Often changes to one of these objects requires changes to the others because the pipeline needs state needs to have the proper contract between the template that its referencing and inputset. If something is added to the pipeline or template it needs to be updated in the inputset and the other objects location.
 
 For the external resources that are managed seperate of the Pipeline, we recommend using Harness Terraform Provider. Terraform can manage the state of Harness CD configurations and user's can audit the lifecycle of them. User's can also provide an automated process around via Harness Pipelines to manage the lifecyle of the Service, Environment and Infrastructure Definition. See [Terraform Provider Automated Onboarding Guide](https://developer.harness.io/docs/platform/Terraform/automate-harness-onboarding) for more details.
-
