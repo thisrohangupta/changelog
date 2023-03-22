@@ -13,9 +13,7 @@
 - Input Sets
 - Feature Flags
 
-In the Git Experience, Git is the source of truth for the Git backed objects. This means Harness doesn't maintain any record of those objects besides the pipeline name, identifier, and Git backed configuration to fetch the pipeline from Git. We do not do any reconciliation or cross sync'ing of the resources.
-
-We honor native Git capabilities like branching, managing files in different repositories, and honoring the state of the file in Git over anything else.
+In the Git Experience, Git is the source of truth for the Git backed objects. This means Harness doesn't maintain any record of those objects besides the pipeline name, identifier, and Git backed configuration to fetch the pipeline from Git. We do not do any reconciliation or cross sync'ing of the resources.We honor native Git capabilities like branching, managing files in different repositories, and honoring the state of the file in Git over anything else.
 
 For more details on Git Experience in Harness Next Gen, please see our [overview](https://developer.harness.io/docs/platform/Git-Experience/git-experience-overview)
 
