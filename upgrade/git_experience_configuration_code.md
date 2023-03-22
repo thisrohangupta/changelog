@@ -1,6 +1,6 @@
 # Git Experience (Harness Next Gen Continuous Deployment) vs Configuration as Code (Harness First Gen Continuous Deployment)
 
-## What is Git Experience?
+## What is Git Experience (Harness Next Gen Platform)?
 
 - Harness will provide the choice to customers to decide where they want to store the config for their resources (Pipelines, Templates etc.) - In Git or In Harness DB
 
@@ -15,14 +15,16 @@
 
 In the Git Experience, Git is the source of truth for the Git backed objects. This means Harness doesn't maintain any record of those objects besides the pipeline name, identifier, and Git backed configuration to fetch the pipeline from Git. We do not do any reconciliation or cross sync'ing of the resources.
 
+We honor native Git capabilities like branching, managing files in different repositories, and honoring the state of the file in Git over anything else.
+
 For more details on Git Experience in Harness Next Gen, please see our [overview](https://developer.harness.io/docs/platform/Git-Experience/git-experience-overview)
 
 
-## What is Configuration as Code?
+## What is Configuration as Code (Harness First Gen CD)?
 
 Configuration As Code allows you to configure Pipelines, Triggers, Workflows, Environments, and Services in Harness using YAML. Nearly everything you can do in the Harness First Gen platform GUI, you can do in YAML as well.
 
-All Harness Configurations can be added and managed in Git. Harness maintains a state of your git configuration in it's database and reads the changes from Git to update its local copy. It also takes changes from the UI and updates the DB record and syncs down to your Git.
+All Harness Configurations can be added and managed in Git. Harness maintains a state of your git configuration in it's database and reads the changes from Git to update its local copy. It also takes changes from the UI and updates the DB record and syncs down to your Git. You can't choose your branch and you cannot test changes for any of the objects, and it can only be managed in a central git repository. 
 
 
 For More details on the Harness First Gen Configuration as Code please see our [overview](https://developer.harness.io/docs/first-gen/firstgen-platform/config-as-code/configuration-as-code)
