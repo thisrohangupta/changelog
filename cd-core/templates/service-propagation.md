@@ -2,8 +2,6 @@
 
 When defining a pipeline, you often times want to pass the same service and its parameters through multiple stages. With Service Propagation you are able to now pass the service, its variables, artifact and manifest inputs through various stages. 
 
-Feature Flag: `CDS_PROPAGATE_STAGE_TEMPLATE`
-
 
 
 ## Product Demo
